@@ -78,7 +78,6 @@ body:has(.calculator-container) {
 /* --- Header & Navigation --- */
 .header {
   background-color: var(--white);
-  border-bottom: 3px solid var(--primary-gold);
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 0.3rem 0;
 }
@@ -213,7 +212,6 @@ body:has(.calculator-container) {
   margin-top: 40px;
   background-color: var(--primary-navy);
   color: var(--white);
-  border-top: 4px solid var(--primary-gold);
 }
 
 .footer__text {
@@ -380,7 +378,6 @@ body:has(.calculator-container) {
   padding: 50px 40px 25px;
   background: linear-gradient(135deg, var(--primary-navy) 0%, #2d6bb5 100%);
   color: var(--white);
-  border-bottom: 4px solid var(--primary-gold);
 }
 
 .article__title {
@@ -407,8 +404,6 @@ body:has(.calculator-container) {
   margin-bottom: 35px;
   font-weight: 500;
   line-height: 1.8;
-  border-left: 4px solid var(--primary-gold);
-  padding-left: 20px;
 }
 
 .article__content h2 {
@@ -416,7 +411,6 @@ body:has(.calculator-container) {
   margin: 40px 0 20px;
   color: var(--primary-navy);
   font-weight: 700;
-  border-bottom: 3px solid var(--primary-gold);
   padding-bottom: 10px;
 }
 
@@ -434,7 +428,6 @@ body:has(.calculator-container) {
 
 .article__quote {
   background: linear-gradient(to right, rgba(27, 79, 145, 0.05), rgba(249, 178, 51, 0.05));
-  border-left: 5px solid var(--primary-red);
   padding: 25px;
   margin: 30px 0;
   font-style: italic;
@@ -479,7 +472,6 @@ body:has(.calculator-container) {
   font-size: 1.5rem;
   color: var(--primary-navy);
   font-weight: 700;
-  border-bottom: 3px solid var(--primary-gold);
   padding-bottom: 12px;
 }
 
@@ -531,7 +523,6 @@ body:has(.calculator-container) {
   font-size: 1.2rem;
   text-align: right;
   color: var(--primary-navy);
-  border-top: 2px solid var(--primary-gold);
   padding-top: 18px;
 }
 
@@ -572,7 +563,7 @@ body:has(.calculator-container) {
 .summary-card {
   padding: 25px;
   background-color: var(--white);
-  border: 3px solid var(--primary-gold);
+  border: none;
   border-radius: 10px;
   color: var(--text-dark);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -584,7 +575,6 @@ body:has(.calculator-container) {
   color: var(--primary-navy) !important;
   font-weight: 700;
   text-align: center;
-  border-bottom: 2px solid var(--primary-gold);
   padding-bottom: 10px;
 }
 
@@ -604,7 +594,6 @@ body:has(.calculator-container) {
   font-weight: bold;
   margin-top: 20px;
   padding-top: 15px;
-  border-top: 2px solid var(--primary-gold);
   font-size: 1.1rem;
   color: var(--primary-navy);
 }
@@ -634,7 +623,7 @@ body:has(.calculator-container) {
   margin-bottom: 10px;
   background-color: rgba(249, 178, 51, 0.1);
   color: var(--primary-navy);
-  border: 2px dashed var(--primary-gold);
+  border: 2px dashed transparent;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;

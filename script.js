@@ -47,6 +47,7 @@ class WiseMMDCApp {
       { name: 'articleCards', fn: () => this.enhanceArticleCards() },
       { name: 'scrollToTop', fn: () => this.addScrollToTopButton() },
       { name: 'navigation', fn: () => this.addNavigationHighlight() },
+      { name: 'blogRedirect', fn: () => this.addBlogComingSoonRedirect() },
       { name: 'formValidation', fn: () => this.addFormInputValidation() },
       { name: 'dynamicGreeting', fn: () => this.addDynamicGreeting() },
       { name: 'readingProgress', fn: () => this.addReadingProgress() },
@@ -381,6 +382,47 @@ class WiseMMDCApp {
     } catch (error) {
       console.error('Error adding navigation highlight:', error);
     }
+  }
+
+  /**
+   * Feature: Blog Coming Soon Redirect
+   * Intercepts clicks on Blog nav, shows toast, then redirects Home.
+   */
+  addBlogComingSoonRedirect() {
+    const blogLink = document.querySelector('.nav-blog');
+    if (!blogLink) return;
+
+    blogLink.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // Create toast/notice
+      const toast = document.createElement('div');
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.textContent = 'Blog: Coming Soon';
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #1B4F91;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 6px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      `;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => { toast.style.opacity = '1'; });
+
+      // Auto-redirect back to Home after 1.2s
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 200);
+        window.location.href = 'index.html';
+      }, 1200);
+    });
   }
 
   /**

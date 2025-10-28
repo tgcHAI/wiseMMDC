@@ -140,7 +140,7 @@ WiseMMDC/
 ├── script.js              # JavaScript functionality (legacy)
 └── README.md              # This file
 ```
-
+Note: Due to an issue with the root directory in Github Pages, I decided not to create any more folders because it did not work. The website did not display "Index.html" as expected; instead, it showed the Readme.md file.
 ---
 
 ## Key Features Added in Milestone 2

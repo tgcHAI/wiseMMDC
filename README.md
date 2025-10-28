@@ -83,6 +83,7 @@ An interactive page where users can:
 - **Dynamic Fields**: Add custom expense categories with editable labels
 - **Real-time Calculations**: Instant updates of totals as you type
 - **Load Sample Data**: Quick-fill button to see example comparisons
+- **💾 Local Storage**: Automatic data persistence - your inputs are saved and restored when you refresh the page
 
 ### 📈 Comparison Summary
 - Side-by-side cards showing Traditional vs. Online student breakdown
@@ -118,6 +119,7 @@ An interactive page where users can:
   - Study mode selection functionality
   - DOM manipulation and event handling
   - Number formatting with comma separators
+  - **Local Storage Management** - Automatic data persistence and restoration
 
 ---
 
@@ -158,6 +160,7 @@ Note: Due to an issue with the root directory in Github Pages, I decided not to 
 - Study mode selection (Traditional/Online)
 - Sample data loading functionality
 - Number formatting (₱1,000.00 format)
+- **💾 Local Storage Integration** - Automatic data persistence
 
 ✅ **Enhanced User Experience**
 - Blue gradient background for calculator page
@@ -169,6 +172,15 @@ Note: Due to an issue with the root directory in Github Pages, I decided not to 
 - No data collection or storage
 - Client-side only calculations
 - Compliant with RA 10173 (Data Privacy Act of 2012)
+
+✅ **💾 Local Storage Feature**
+- **Automatic Data Persistence**: All form inputs are automatically saved to browser's localStorage
+- **Data Restoration**: When you refresh the page, all your data is restored exactly as you left it
+- **Comprehensive Storage**: Saves income data, all expense fields, custom fields, and edited labels
+- **Smart Management**: Data expires after 30 days to prevent stale information
+- **Visual Feedback**: Toast notifications confirm when data is saved or restored
+- **Error Handling**: Graceful handling of localStorage errors with user notifications
+- **Privacy Safe**: Data never leaves your browser - completely local storage
 
 
 ---
@@ -191,6 +203,7 @@ The website is fully responsive and optimized for:
 5. **Enter Your Expenses** - Fill in expenses for both traditional and online scenarios
 6. **Add Custom Expenses** - Use the "+ Add Custom Expense" button for additional categories
 7. **Compare Results** - View the summary cards showing your remaining balance for each option
+8. **💾 Data Persistence** - Your data is automatically saved! Refresh the page anytime and your inputs will be restored
 
 ---
 
@@ -226,6 +239,7 @@ The website is fully responsive and optimized for:
 - [x] Sample data loading functionality
 - [x] Enhanced user experience features
 - [x] Privacy compliance implementation
+- [x] **💾 Local Storage Integration** - Automatic data persistence and restoration
 
 
 ### 🚨 Contingency Planning
@@ -292,6 +306,7 @@ The website is fully responsive and optimized for:
 - Added JavaScript interactivity and DOM manipulation
 - Created dynamic expense calculator with real-time calculations
 - Implemented study mode selection feature
+- **💾 Added Local Storage Integration** - Automatic data persistence and restoration
 
 
 ---

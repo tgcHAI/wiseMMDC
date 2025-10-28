@@ -303,6 +303,332 @@ Group Members:
     let customFieldCounter = 0;
 
     /**
+     * LocalStorageManager Class
+     * Handles saving and restoring calculator data
+     */
+    class LocalStorageManager {
+      constructor() {
+        this.storageKey = 'wiseMMDC_calculator_data';
+        this.autoSaveDelay = 1000; // 1 second delay for auto-save
+        this.autoSaveTimer = null;
+        this.isDataLoaded = false;
+      }
+
+      /**
+       * Save all calculator data to localStorage
+       */
+      saveData() {
+        try {
+          const data = {
+            timestamp: new Date().toISOString(),
+            version: '1.0',
+            income: {
+              allowance: document.getElementById('allowance').value || '',
+              parttime: document.getElementById('parttime').value || ''
+            },
+            traditional: this.getExpenseData('traditional'),
+            online: this.getExpenseData('online'),
+            customFields: this.getCustomFieldsData(),
+            customFieldCounter: customFieldCounter
+          };
+
+          localStorage.setItem(this.storageKey, JSON.stringify(data));
+          this.showSaveIndicator('Data saved automatically');
+          console.log('✅ Calculator data saved to localStorage');
+        } catch (error) {
+          console.error('❌ Failed to save data:', error);
+          this.showSaveIndicator('Failed to save data', 'error');
+        }
+      }
+
+      /**
+       * Load data from localStorage
+       */
+      loadData() {
+        try {
+          const savedData = localStorage.getItem(this.storageKey);
+          if (!savedData) {
+            console.log('ℹ️ No saved data found');
+            return false;
+          }
+
+          const data = JSON.parse(savedData);
+          
+          // Check if data is recent (within 30 days)
+          const dataAge = new Date() - new Date(data.timestamp);
+          if (dataAge > 30 * 24 * 60 * 60 * 1000) {
+            console.log('ℹ️ Saved data is too old, clearing...');
+            this.clearData();
+            return false;
+          }
+
+          // Restore income data
+          document.getElementById('allowance').value = data.income.allowance || '';
+          document.getElementById('parttime').value = data.income.parttime || '';
+
+          // Restore expense data
+          this.restoreExpenseData('traditional', data.traditional);
+          this.restoreExpenseData('online', data.online);
+
+          // Restore custom fields
+          if (data.customFields) {
+            this.restoreCustomFields(data.customFields);
+          }
+
+          // Restore custom field counter
+          if (data.customFieldCounter) {
+            customFieldCounter = data.customFieldCounter;
+          }
+
+          this.isDataLoaded = true;
+          this.showSaveIndicator('Previous data restored', 'success');
+          console.log('✅ Calculator data restored from localStorage');
+          
+          // Recalculate totals after loading
+          setTimeout(() => {
+            calculator.calculateTotals();
+          }, 100);
+
+          return true;
+        } catch (error) {
+          console.error('❌ Failed to load data:', error);
+          this.showSaveIndicator('Failed to load saved data', 'error');
+          return false;
+        }
+      }
+
+      /**
+       * Get expense data for a specific type
+       * @param {string} type - 'traditional' or 'online'
+       * @returns {Object} - Expense data
+       */
+      getExpenseData(type) {
+        const inputs = document.querySelectorAll(`.expense-input[data-type="${type}"]`);
+        const data = {};
+
+        inputs.forEach((input, index) => {
+          const fieldContainer = input.closest('.form-section__group');
+          const fieldKey = fieldContainer.dataset.field || `field_${index}`;
+          const label = fieldContainer.querySelector('.editable-label');
+          
+          data[fieldKey] = {
+            value: input.value || '',
+            label: label ? label.textContent : '',
+            originalLabel: label ? label.dataset.original : ''
+          };
+        });
+
+        return data;
+      }
+
+      /**
+       * Restore expense data for a specific type
+       * @param {string} type - 'traditional' or 'online'
+       * @param {Object} data - Expense data to restore
+       */
+      restoreExpenseData(type, data) {
+        if (!data) return;
+
+        const inputs = document.querySelectorAll(`.expense-input[data-type="${type}"]`);
+        
+        inputs.forEach((input, index) => {
+          const fieldContainer = input.closest('.form-section__group');
+          const fieldKey = fieldContainer.dataset.field || `field_${index}`;
+          
+          if (data[fieldKey]) {
+            input.value = data[fieldKey].value || '';
+            
+            const label = fieldContainer.querySelector('.editable-label');
+            if (label && data[fieldKey].label) {
+              label.textContent = data[fieldKey].label;
+              if (data[fieldKey].originalLabel) {
+                label.dataset.original = data[fieldKey].originalLabel;
+              }
+            }
+          }
+        });
+      }
+
+      /**
+       * Get custom fields data
+       * @returns {Array} - Custom fields data
+       */
+      getCustomFieldsData() {
+        const customFields = document.querySelectorAll('.custom-field');
+        const data = [];
+
+        customFields.forEach(field => {
+          const input = field.querySelector('.expense-input');
+          const label = field.querySelector('.editable-label');
+          
+          if (input && label) {
+            data.push({
+              type: input.dataset.type,
+              value: input.value || '',
+              label: label.textContent || '',
+              originalLabel: label.dataset.original || '',
+              fieldKey: field.dataset.field
+            });
+          }
+        });
+
+        return data;
+      }
+
+      /**
+       * Restore custom fields
+       * @param {Array} customFieldsData - Custom fields data to restore
+       */
+      restoreCustomFields(customFieldsData) {
+        if (!customFieldsData || !Array.isArray(customFieldsData)) return;
+
+        // Clear existing custom fields
+        document.querySelectorAll('.custom-field').forEach(field => field.remove());
+
+        // Restore each custom field
+        customFieldsData.forEach(fieldData => {
+          this.addCustomFieldFromData(fieldData);
+        });
+      }
+
+      /**
+       * Add custom field from saved data
+       * @param {Object} fieldData - Field data to restore
+       */
+      addCustomFieldFromData(fieldData) {
+        const containerId = fieldData.type === 'traditional' ? 'traditional-fields' : 'online-fields';
+        const container = document.getElementById(containerId);
+        
+        if (!container) return;
+
+        const newField = document.createElement('div');
+        newField.className = 'form-section__group custom-field mb-3';
+        newField.dataset.field = fieldData.fieldKey;
+        
+        newField.innerHTML = `
+          <div class="field-header">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="${fieldData.originalLabel || fieldData.label}">${fieldData.label}</label>
+            <button type="button" class="btn btn-sm btn-danger btn-delete-field" onclick="removeExpenseField(this)">✕</button>
+          </div>
+          <input type="number" 
+                 class="form-control form-section__input expense-input" 
+                 data-type="${fieldData.type}" 
+                 placeholder="0" 
+                 value="${fieldData.value}">
+        `;
+        
+        container.appendChild(newField);
+        
+        // Add event listeners to new field
+        const newInput = newField.querySelector('.expense-input');
+        const newLabel = newField.querySelector('.editable-label');
+        
+        newInput.addEventListener('input', (e) => calculator.handleInputChange(e));
+        newInput.addEventListener('blur', (e) => calculator.validateInput(e.target));
+        newInput.addEventListener('focus', (e) => calculator.clearInputError(e.target));
+        
+        newLabel.addEventListener('focus', (e) => calculator.handleLabelFocus(e));
+        newLabel.addEventListener('blur', (e) => calculator.handleLabelBlur(e));
+        newLabel.addEventListener('keydown', (e) => calculator.handleLabelKeydown(e));
+      }
+
+      /**
+       * Clear all saved data
+       */
+      clearData() {
+        try {
+          localStorage.removeItem(this.storageKey);
+          this.showSaveIndicator('Data cleared', 'success');
+          console.log('✅ Calculator data cleared from localStorage');
+        } catch (error) {
+          console.error('❌ Failed to clear data:', error);
+          this.showSaveIndicator('Failed to clear data', 'error');
+        }
+      }
+
+      /**
+       * Check if there's saved data
+       * @returns {boolean} - Whether saved data exists
+       */
+      hasSavedData() {
+        return localStorage.getItem(this.storageKey) !== null;
+      }
+
+      /**
+       * Auto-save with debouncing
+       */
+      scheduleAutoSave() {
+        if (this.autoSaveTimer) {
+          clearTimeout(this.autoSaveTimer);
+        }
+        
+        this.autoSaveTimer = setTimeout(() => {
+          this.saveData();
+        }, this.autoSaveDelay);
+      }
+
+      /**
+       * Show save indicator
+       * @param {string} message - Message to show
+       * @param {string} type - Type of message ('success', 'error', 'info')
+       */
+      showSaveIndicator(message, type = 'info') {
+        // Remove existing indicator
+        const existingIndicator = document.getElementById('save-indicator');
+        if (existingIndicator) {
+          existingIndicator.remove();
+        }
+
+        const indicator = document.createElement('div');
+        indicator.id = 'save-indicator';
+        indicator.textContent = message;
+        
+        const colors = {
+          success: '#28a745',
+          error: '#E31E24',
+          info: '#007bff'
+        };
+        
+        indicator.style.cssText = `
+          position: fixed;
+          top: 20px;
+          left: 20px;
+          background: ${colors[type]};
+          color: white;
+          padding: 8px 16px;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          z-index: 9999;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        `;
+        
+        document.body.appendChild(indicator);
+        
+        // Fade in
+        setTimeout(() => {
+          indicator.style.opacity = '1';
+        }, 10);
+        
+        // Fade out and remove
+        setTimeout(() => {
+          indicator.style.opacity = '0';
+          setTimeout(() => {
+            if (indicator.parentNode) {
+              indicator.remove();
+            }
+          }, 300);
+        }, 2000);
+      }
+    }
+
+    // Create localStorage manager instance
+    const localStorageManager = new LocalStorageManager();
+
+    /**
      * Enhanced Calculator Class
      * Handles all calculator functionality with improved error handling
      */
@@ -326,6 +652,10 @@ Group Members:
         try {
           this.setupEventListeners();
           this.validateInitialState();
+          
+          // Load saved data if available
+          const dataLoaded = localStorageManager.loadData();
+          
           this.isInitialized = true;
           console.log('✅ Enhanced Calculator initialized successfully');
         } catch (error) {
@@ -379,6 +709,9 @@ Group Members:
           
           // Calculate totals
           this.calculateTotals();
+          
+          // Schedule auto-save
+          localStorageManager.scheduleAutoSave();
           
         } catch (error) {
           console.error('Error handling input change:', error);
@@ -496,6 +829,9 @@ Group Members:
         if (label.textContent.trim() === '') {
           label.textContent = label.dataset.original || 'New Expense';
         }
+        
+        // Schedule auto-save when label is edited
+        localStorageManager.scheduleAutoSave();
       }
 
       /**
@@ -773,6 +1109,9 @@ Group Members:
       // Recalculate totals
       calculateTotals();
       
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+      
       // Show success message
       alert('✅ Traditional Student sample data loaded!');
     }
@@ -814,6 +1153,9 @@ Group Members:
       
       // Recalculate totals
       calculateTotals();
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
       
       // Show success message
       alert('✅ MMDC Online Student sample data loaded!');
@@ -872,6 +1214,9 @@ Group Members:
       // Recalculate totals
       calculateTotals();
       
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+      
       // Show success message
       alert('✅ Sample data loaded! Compare Traditional vs Online student expenses.');
     }
@@ -898,7 +1243,18 @@ Group Members:
       
       // Add event listener to new input
       const newInput = newField.querySelector('.expense-input');
-      newInput.addEventListener('input', calculateTotals);
+      const newLabel = newField.querySelector('.editable-label');
+      
+      newInput.addEventListener('input', (e) => calculator.handleInputChange(e));
+      newInput.addEventListener('blur', (e) => calculator.validateInput(e.target));
+      newInput.addEventListener('focus', (e) => calculator.clearInputError(e.target));
+      
+      newLabel.addEventListener('focus', (e) => calculator.handleLabelFocus(e));
+      newLabel.addEventListener('blur', (e) => calculator.handleLabelBlur(e));
+      newLabel.addEventListener('keydown', (e) => calculator.handleLabelKeydown(e));
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
     }
 
     // Add new expense field
@@ -923,11 +1279,21 @@ Group Members:
       
       // Add event listener to new input
       const newInput = newField.querySelector('.expense-input');
-      newInput.addEventListener('input', calculateTotals);
+      const newLabel = newField.querySelector('.editable-label');
+      
+      newInput.addEventListener('input', (e) => calculator.handleInputChange(e));
+      newInput.addEventListener('blur', (e) => calculator.validateInput(e.target));
+      newInput.addEventListener('focus', (e) => calculator.clearInputError(e.target));
+      
+      newLabel.addEventListener('focus', (e) => calculator.handleLabelFocus(e));
+      newLabel.addEventListener('blur', (e) => calculator.handleLabelBlur(e));
+      newLabel.addEventListener('keydown', (e) => calculator.handleLabelKeydown(e));
       
       // Focus on the new label for immediate editing
-      const newLabel = newField.querySelector('.editable-label');
       newLabel.focus();
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
     }
 
     // Remove expense field
@@ -935,6 +1301,9 @@ Group Members:
       const field = button.closest('.form-section__group');
       field.remove();
       calculateTotals();
+      
+      // Schedule auto-save after removing field
+      localStorageManager.scheduleAutoSave();
     }
 
     // Initialize calculator when DOM is ready
@@ -950,5 +1319,43 @@ Group Members:
 
   <!-- Bootstrap JavaScript Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  
+  <!-- Additional CSS for Local Storage Features -->
+  <style>
+    /* Prevent parent from clipping rounded input borders */
+    .form-section { overflow: visible; }
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .btn-delete-field {
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      line-height: 1;
+      border-radius: 4px;
+    }
+    
+    .custom-field {
+      border: none;                 /* no decorative borders that can clip */
+      padding: 0;                   /* align with other groups */
+      margin: 0 0 20px !important;  /* same spacing as .form-section__group */
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .custom-field .form-section__input {
+      box-sizing: border-box;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    
+    #save-indicator {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+  </style>
 </body>
 </html>

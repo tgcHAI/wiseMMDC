@@ -1,5 +1,7 @@
 # Wise MMDC - Student Expense Comparison
 
+<img width="1615" height="786" alt="{343B75DC-B39F-48AC-81F6-0F69DC5A1879}" src="https://github.com/user-attachments/assets/d26ebf78-6f05-41b0-8235-ffd07f2bac6a" />
+
 ## Project Description
 
 **Status:** Milestone 2 - Interactive Website (Submission)

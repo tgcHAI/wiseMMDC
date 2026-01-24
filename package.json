@@ -1,0 +1,26 @@
+{
+  "name": "wisemmdc",
+  "version": "1.0.0",
+  "description": "<img width=\"1615\" height=\"786\" alt=\"{343B75DC-B39F-48AC-81F6-0F69DC5A1879}\" src=\"https://github.com/user-attachments/assets/d26ebf78-6f05-41b0-8235-ffd07f2bac6a\" />",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tgcHAI/wiseMMDC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tgcHAI/wiseMMDC/issues"
+  },
+  "homepage": "https://github.com/tgcHAI/wiseMMDC#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.1.5"
+  }
+}

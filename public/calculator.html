@@ -274,6 +274,12 @@ Group Members:
         </div>
       </div>
       </section>
+
+      <!-- Calculation History Section -->
+      <section class="mt-5" role="region" aria-labelledby="history-title">
+        <h2 id="history-title" class="text-center mb-4" style="color: var(--primary-navy); font-weight: 700;">Recent Calculations</h2>
+        <div id="calc-history" class="row g-3"></div>
+      </section>
     </div>
   </main>
 
@@ -911,7 +917,7 @@ Group Members:
       }
 
       /**
-       * Calculate totals with error handling
+       * Calculate totals with error handling 
        */
       calculateTotals() {
         try {
@@ -1044,6 +1050,11 @@ Group Members:
             onlineBalanceElement.style.color = '';
             onlineBalanceElement.removeAttribute('aria-label');
           }
+        }
+
+        // Save calculation to MongoDB
+        if (traditionalTotal > 0 || onlineTotal > 0) {
+          saveCalculation(traditionalTotal, onlineTotal);
         }
       }
     }

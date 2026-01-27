@@ -637,7 +637,45 @@ const app = new WiseMMDCApp();
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   app.init();
+  // Load calculation history on page load (only on calculator page)
+  if (window.location.pathname.endsWith('calculator.html')) {
+    loadHistory();
+  }
 });
+
+// --- Student Expense Calculator: Save & Load History ---
+function saveCalculation(campusTotal, onlineTotal) {
+  fetch('/api/calc', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ campusTotal, onlineTotal })
+  })
+  .then(res => res.json())
+  .then(() => loadHistory())
+  .catch(err => console.error('Failed to save calculation:', err));
+}
+
+function loadHistory() {
+  fetch('/api/calcs')
+    .then(res => res.json())
+    .then(calcs => {
+      const historyDiv = document.getElementById('calc-history');
+      if (!historyDiv) return;
+      historyDiv.innerHTML = '';
+      calcs.forEach(calc => {
+        const card = document.createElement('div');
+        card.className = 'card mb-2';
+        card.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">Campus: ₱${calc.campusTotal} | Online: ₱${calc.onlineTotal}</h5>
+            <p class="card-text"><small class="text-muted">${new Date(calc.date).toLocaleString()}</small></p>
+          </div>
+        `;
+        historyDiv.appendChild(card);
+      });
+    })
+    .catch(err => console.error('Failed to load history:', err));
+}
 
 // ====================================
 // CSS Animations (injected via JavaScript)

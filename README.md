@@ -2,66 +2,18 @@
 
 <img width="1615" height="786" alt="{343B75DC-B39F-48AC-81F6-0F69DC5A1879}" src="https://github.com/user-attachments/assets/d26ebf78-6f05-41b0-8235-ffd07f2bac6a" />
 
-## Project Description
-
-**Status:** Milestone 2 - Interactive Website (Submission)
-
-This project is a web application designed for the **MO-IT120 - Web Systems and Technology** course. Its primary goal is to help Filipino students compare the monthly expenses of a traditional, on-campus learning setup versus an online learning setup, like the one at MMDC.
-
-The application provides an **interactive calculator** where students can input their income and typical expenses for both scenarios to see a direct comparison of their remaining balance in real-time.
-
-This tool aims to help students make more informed financial decisions about their education path.
 
 **🌐 Live Website:** [Click here to visit the live site](https://j0eychnpulpey.github.io/wiseMMDC-Final/index.html)
 
 ---
 
-## Team Members - Group 13
+## Team Members - Group 10
 
 ### 👥 Team Overview
-- **John Paul P.** - Project Lead & Frontend Development
-- **Jhaersn C.** - UI/UX Design & Bootstrap Integration
-- **Jubiler P.** - JavaScript Development & Interactive Features
-- **Reinard R.** - Documentation & Quality Assurance
-
-### 🎯 Individual Contributions
-
-#### John Paul P. (Project Lead)
-- **Role:** Project coordination and frontend architecture
-- **Contributions:**
-  - Designed overall project structure and file organization
-  - Implemented responsive navigation and header components
-  - Created the hero section and landing page layout
-  - Managed project timeline and milestone coordination
-  - Ensured Bootstrap integration across all pages
-
-#### Jhaersn C. (UI/UX Designer)
-- **Role:** Visual design and user experience
-- **Contributions:**
-  - Designed color scheme based on Wise MMDC logo
-  - Created responsive layouts using Bootstrap grid system
-  - Implemented CSS animations and hover effects
-  - Designed article cards and blog section layout
-  - Ensured mobile-first responsive design principles
-
-#### Jubiler P. (JavaScript Developer)
-- **Role:** Interactive functionality and user interactions
-- **Contributions:**
-  - Developed real-time expense calculation system
-  - Implemented dynamic form field creation/deletion
-  - Created study mode selection functionality
-  - Built sample data loading features
-  - Added interactive enhancements (greetings, scroll-to-top, etc.)
-
-#### Reinard R. (Documentation & QA)
-- **Role:** Documentation and quality assurance
-- **Contributions:**
-  - Created comprehensive README documentation
-  - Wrote detailed project descriptions and feature lists
-  - Implemented privacy compliance features
-  - Conducted cross-browser testing
-  - Ensured code quality and best practices
-
+- **Chelsea Jin Collado
+- **Jhaersn Fen Castañeda
+- **Angela Mae Ortega
+- **Monina Angela Patiño
 ---
 
 ## Features
@@ -341,8 +293,6 @@ You can view the live version of our project deployed on GitHub Pages here:
 
 ## License
 
-This project is created for educational purposes as part of the MO-IT120 course at MMDC.
+This project is created for educational purposes at MMDC.
 
 ---
-
-**© 2025 Wise MMDC - Group 13. Helping Filipino students make informed financial decisions.**

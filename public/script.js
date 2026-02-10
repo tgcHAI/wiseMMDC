@@ -1,20 +1,3 @@
-/**
- * ====================================
- * Wise MMDC Interactive Enhancements - Group 13
- * MO-IT120 - Web Systems and Technology
- * 
- * Group Members:
- * - John Paul P. (Project Lead & Frontend Development)
- * - Reinard R. (Documentation & Quality Assurance)
- * - JHAERSN C. (UI/UX Design & Bootstrap Integration)
- * - Jubiler P. (JavaScript Development & Interactive Features)
- * ====================================
- */
-
-/**
- * Main Application Controller
- * Handles initialization and coordination of all interactive features
- */
 class WiseMMDCApp {
   constructor() {
     this.isInitialized = false;

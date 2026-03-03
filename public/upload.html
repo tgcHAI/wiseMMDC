@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WiseMMDC - File Upload</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-light">
+  <header class="header">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a href="/" class="navbar-brand header__logo">
+          <img src="/images/Wise MMDC Logo.png" class="header__logo-img" alt="Wise MMDC">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto nav__list">
+            <li class="nav-item nav__item"><a href="/" class="nav-link nav__link nav-home">Home</a></li>
+            <li class="nav-item nav__item"><a href="/calculator.html" class="nav-link nav__link">Calculator</a></li>
+            <li class="nav-item nav__item"><a href="/about.html" class="nav-link nav__link">About</a></li>
+            <li class="nav-item nav__item" id="google-auth-nav-item">
+              <a href="/auth/google" class="nav-link nav__link" id="google-auth-link" aria-label="Sign in with Google">Sign in with Google</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container mt-5">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">📁 WiseMMDC File Upload</h3>
+        </div>
+        <div class="card-body">
+        <div class="mb-3" id="auth-status"></div>
+        
+        <!-- Upload Form -->
+        <form id="uploadForm">
+          <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-control" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Your Email (from Google sign-in)</label>
+            <input type="email" class="form-control" name="email" id="google-email" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Choose File</label>
+            <input type="file" class="form-control" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,image/jpeg,image/png,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Upload File</button>
+        </form>
+
+        <div id="message" class="mt-3"></div>
+
+        <!-- Uploaded Files List -->
+        <hr class="my-4">
+        <h4>📋 Uploaded Files</h4>
+        <div id="fileList" class="row"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer mt-5 py-4 text-center">
+    <div class="container">
+      <p class="footer__text mb-2">© 2025 Wise MMDC. Helping Filipino students make informed financial decisions.</p>
+      <p class="footer__text small opacity-75 mb-0">🔒 <strong>Privacy Notice:</strong> No personal information is collected or stored. Compliant with RA 10173 (Data Privacy Act of 2012).</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="/script.js"></script>
+  <script>
+    let currentUser = null;
+    let isUploading = false;
+    const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+    function setAuthStatus(message, variant) {
+      const authStatus = document.getElementById('auth-status');
+      if (!authStatus) return;
+      authStatus.innerHTML = message
+        ? `<div class="alert alert-${variant}">${message}</div>`
+        : '';
+    }
+
+    async function loadSessionUser() {
+      try {
+        const res = await fetch('/auth/status', { credentials: 'include' });
+        if (!res.ok) {
+          currentUser = null;
+          return false;
+        }
+
+        const data = await res.json();
+        if (!data.authenticated) {
+          currentUser = null;
+          return false;
+        }
+
+        currentUser = data;
+        const emailField = document.getElementById('google-email');
+        if (emailField) emailField.value = data.email || '';
+        setAuthStatus(`Signed in as ${data.email}.`, 'success');
+        return true;
+      } catch (_error) {
+        currentUser = null;
+        return false;
+      }
+    }
+
+    function showSignedOutState() {
+      const emailField = document.getElementById('google-email');
+      if (emailField) emailField.value = '';
+      setAuthStatus('You are not signed in. Please sign in first.', 'warning');
+      document.getElementById('fileList').innerHTML = '<div class="col-12"><div class="alert alert-info">Please <a href="/auth/google">sign in with Google</a> to upload and view files.</div></div>';
+    }
+
+    // Upload form
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fileInput = e.target.querySelector('input[name="file"]');
+      const selectedFile = fileInput?.files?.[0];
+      if (!selectedFile) {
+        document.getElementById('message').innerHTML = '<div class="alert alert-warning">Please choose a file first.</div>';
+        return;
+      }
+
+      if (selectedFile.size > MAX_UPLOAD_BYTES) {
+        document.getElementById('message').innerHTML = '<div class="alert alert-warning">File too large. Max size is 5MB.</div>';
+        return;
+      }
+
+      if (isUploading) return;
+
+      isUploading = true;
+
+      const submitButton = e.target.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton ? submitButton.textContent : '';
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Uploading...';
+      }
+
+      const formData = new FormData(e.target);
+
+      if (!currentUser) {
+        setAuthStatus('Please sign in before uploading.', 'warning');
+        isUploading = false;
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
+        return;
+      }
+      
+      try {
+        const res = await fetch('/upload', {
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          document.getElementById('message').innerHTML = 
+            `<div class="alert alert-success">${data.message}</div>`;
+          document.getElementById('uploadForm').reset();
+          loadFiles();
+        } else {
+          if (res.status === 401 || res.status === 403) {
+            currentUser = null;
+            showSignedOutState();
+          }
+          document.getElementById('message').innerHTML = 
+            `<div class="alert alert-warning">${data.error}</div>`;
+        }
+      } catch (err) {
+        document.getElementById('message').innerHTML = 
+          `<div class="alert alert-danger">Upload failed</div>`;
+      } finally {
+        isUploading = false;
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
+      }
+    });
+
+    // Load uploaded files
+    async function loadFiles() {
+      try {
+        if (!currentUser) {
+          showSignedOutState();
+          return;
+        }
+
+        const res = await fetch('/my-uploads', {
+          credentials: 'include',
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          currentUser = null;
+          showSignedOutState();
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        const users = data.users || data || [];
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = '';
+
+        if (users.length === 0) {
+          fileList.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">No files yet. Upload first!</p></div>';
+          return;
+        }
+
+        users.slice(0, 12).forEach(user => {
+          const isImage = user.contentType?.startsWith('image/');
+          fileList.innerHTML += `
+            <div class="col-md-4 mb-3">
+              <div class="card shadow-sm">
+                ${isImage
+                  ? `<img src="${user.fileUrl}" class="card-img-top" style="height:150px;object-fit:cover;" onerror="this.style.display='none'">`
+                  : `<div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height:150px">File</div>`
+                }
+                <div class="card-body">
+                  <h6 class="card-title">${user.fileName}</h6>
+                  <small class="text-muted">${user.name} • ${user.email}</small>
+                  <a href="${user.fileUrl}" class="btn btn-sm btn-outline-primary mt-2 w-100" target="_blank">View File</a>
+                  <small class="text-muted d-block mt-1">${new Date(user.uploadDate).toLocaleDateString()}</small>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error('loadFiles error:', err);
+        document.getElementById('fileList').innerHTML = `<div class="col-12"><div class="alert alert-warning">Files load failed: ${err.message}</div></div>`;
+      }
+    }
+
+    (async function initUploadPage() {
+      const authenticated = await loadSessionUser();
+      if (!authenticated) {
+        showSignedOutState();
+        return;
+      }
+      loadFiles();
+    })();
+  </script>
+</body>
+</html>

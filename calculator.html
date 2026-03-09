@@ -1,0 +1,1363 @@
+<!-- Wise MMDC Interactive Enhancements Group 13 MO-IT161 H3101
+Group Members:
+- John Paul P.
+- Reinard R.
+- JHAERSN C.
+- Jubiler P.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wise MMDC - Expense Comparison Calculator</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a href="index.html" class="navbar-brand header__logo">
+          <img src="images/Wise MMDC Logo.png" class="header__logo-img" alt="Wise MMDC">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto nav__list">
+            <li class="nav-item nav__item"><a href="index.html" class="nav-link nav__link nav-home">Home</a></li>
+            <li class="nav-item nav__item"><a href="#" class="nav-link nav__link nav-blog">Blog</a></li>
+            <li class="nav-item nav__item"><a href="calculator.html" class="nav-link nav__link active">Calculator</a></li>
+            <li class="nav-item nav__item"><a href="about.html" class="nav-link nav__link">About</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="calculator-container py-4">
+    <div class="container">
+      
+      <!-- Study Mode Selection -->
+      <section class="study-mode-section mb-4" role="region" aria-labelledby="study-mode-title">
+        <h2 id="study-mode-title" class="text-center mb-4" style="color: var(--primary-navy); font-weight: 700;">Select Your Study Mode</h2>
+        <div class="row g-3" role="group" aria-label="Study mode options">
+          <div class="col-12 col-md-6">
+            <button type="button" 
+                    class="study-mode-card" 
+                    onclick="loadTraditionalOnly()" 
+                    aria-describedby="traditional-description"
+                    aria-label="Load Traditional Student sample data"
+                    style="width: 100%; padding: 30px; border: 3px solid #d0d0d0; border-radius: 12px; background: #fff; cursor: pointer; transition: all 0.3s ease;">
+              <div style="font-size: 3rem; margin-bottom: 10px;" aria-hidden="true">🎓</div>
+              <h3 style="margin: 10px 0; color: var(--primary-navy); font-size: 1.3rem; font-weight: 700;">Traditional Student</h3>
+              <p id="traditional-description" style="margin: 0; color: #666; font-size: 0.95rem;">On-Campus Learning</p>
+            </button>
+          </div>
+          <div class="col-12 col-md-6">
+            <button type="button" 
+                    class="study-mode-card" 
+                    onclick="loadOnlineOnly()" 
+                    aria-describedby="online-description"
+                    aria-label="Load MMDC Online Student sample data"
+                    style="width: 100%; padding: 30px; border: 3px solid #d0d0d0; border-radius: 12px; background: #fff; cursor: pointer; transition: all 0.3s ease;">
+              <div style="font-size: 3rem; margin-bottom: 10px;" aria-hidden="true">💻</div>
+              <h3 style="margin: 10px 0; color: var(--primary-navy); font-size: 1.3rem; font-weight: 700;">MMDC Online Student</h3>
+              <p id="online-description" style="margin: 0; color: #666; font-size: 0.95rem;">Online Learning</p>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Monthly Income Section -->
+      <section class="form-section income mb-4" role="region" aria-labelledby="income-title">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h2 id="income-title" class="form-section__title mb-0">Monthly Income</h2>
+          <button type="button" 
+                  class="btn btn-outline-primary button button--secondary" 
+                  onclick="loadSampleData()"
+                  aria-label="Load sample data for both study modes">Load Sample Data</button>
+        </div>
+      <div class="income__fields row g-3" role="group" aria-labelledby="income-title">
+        <div class="form-section__group col-md-6">
+          <label for="allowance" class="form-label form-section__label">Monthly Allowance</label>
+          <input type="number" 
+                 id="allowance" 
+                 class="form-control form-section__input" 
+                 placeholder="0.00"
+                 min="0"
+                 max="999999"
+                 step="0.01"
+                 aria-describedby="allowance-help"
+                 aria-label="Enter your monthly allowance amount">
+          <div id="allowance-help" class="form-text">Enter your monthly allowance in Philippine Peso (₱)</div>
+        </div>
+        <div class="form-section__group col-md-6">
+          <label for="parttime" class="form-label form-section__label">Part-time Job Income</label>
+          <input type="number" 
+                 id="parttime" 
+                 class="form-control form-section__input" 
+                 placeholder="0.00"
+                 min="0"
+                 max="999999"
+                 step="0.01"
+                 aria-describedby="parttime-help"
+                 aria-label="Enter your part-time job income">
+          <div id="parttime-help" class="form-text">Enter your monthly part-time job earnings in Philippine Peso (₱)</div>
+        </div>
+      </div>
+        <p class="form-section__total mt-3" id="income-total" role="status" aria-live="polite">Total Monthly Income: ₱0.00</p>
+      </section>
+
+      <div class="expenses-grid row g-4">
+      <section class="form-section expenses expenses--traditional col-12 col-lg-6" role="region" aria-labelledby="traditional-title">
+        <h2 id="traditional-title" class="form-section__title">🎓 Traditional Student Expenses</h2>
+        <div id="traditional-fields" role="group" aria-labelledby="traditional-title">
+          <div class="form-section__group mb-3" data-field="transport">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="Transportation"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="Transportation expense label. Click to edit.">Transportation</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="traditional" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="Transportation expense amount">
+          </div>
+          <div class="form-section__group mb-3" data-field="meals">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="Monthly Food Allowance"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="Monthly Food Allowance expense label. Click to edit.">Monthly Food Allowance</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="traditional" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="Monthly Food Allowance expense amount">
+          </div>
+          <div class="form-section__group mb-3" data-field="supplies">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="School Supplies"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="School Supplies expense label. Click to edit.">School Supplies</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="traditional" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="School Supplies expense amount">
+          </div>
+          <div class="form-section__group mb-3" data-field="social">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="Hangouts/Social"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="Hangouts/Social expense label. Click to edit.">Hangouts/Social</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="traditional" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="Hangouts/Social expense amount">
+          </div>
+        </div>
+        <button type="button" 
+                class="btn btn-sm btn-success btn-add-field" 
+                onclick="addExpenseField('traditional')"
+                aria-label="Add a custom expense field for Traditional Student">+ Add Custom Expense</button>
+        <p class="form-section__total" id="traditional-total" role="status" aria-live="polite">Total Monthly Expenses: ₱0.00</p>
+      </section>
+
+      <section class="form-section expenses expenses--online col-12 col-lg-6" role="region" aria-labelledby="online-title">
+        <h2 id="online-title" class="form-section__title">💻 MMDC Online Student Expenses</h2>
+        <div id="online-fields" role="group" aria-labelledby="online-title">
+          <div class="form-section__group mb-3" data-field="internet">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="Internet Plan"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="Internet Plan expense label. Click to edit.">Internet Plan</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="online" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="Internet Plan expense amount">
+          </div>
+          <div class="form-section__group mb-3" data-field="cafe">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="Occasional Café"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="Occasional Café expense label. Click to edit.">Occasional Café</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="online" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="Occasional Café expense amount">
+          </div>
+          <div class="form-section__group mb-3" data-field="tools">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="Digital Tools/Software"
+                   tabindex="0"
+                   role="textbox"
+                   aria-label="Digital Tools/Software expense label. Click to edit.">Digital Tools/Software</label>
+            <input type="number" 
+                   class="form-control form-section__input expense-input" 
+                   data-type="online" 
+                   placeholder="0"
+                   min="0"
+                   max="999999"
+                   step="0.01"
+                   aria-label="Digital Tools/Software expense amount">
+          </div>
+        </div>
+        <button type="button" 
+                class="btn btn-sm btn-success btn-add-field" 
+                onclick="addExpenseField('online')"
+                aria-label="Add a custom expense field for Online Student">+ Add Custom Expense</button>
+        <p class="form-section__total" id="online-total" role="status" aria-live="polite">Total Monthly Expenses: ₱0.00</p>
+      </section>
+    </div>
+
+    <section class="summary mt-4" role="region" aria-labelledby="summary-title">
+      <h2 id="summary-title" class="summary__title text-center mb-4">Monthly Comparison Summary</h2>
+      <div class="summary__grid row g-4" role="group" aria-labelledby="summary-title">
+        <div class="col-12 col-md-6">
+          <div class="summary-card h-100" role="region" aria-labelledby="traditional-summary-title">
+            <h3 id="traditional-summary-title" class="summary-card__title">Traditional Student</h3>
+            <div role="list" aria-label="Traditional student financial breakdown">
+              <p class="summary-card__item" role="listitem">Income: <span class="summary-card__value" id="traditional-income" aria-label="Traditional student income">₱0.00</span></p>
+              <p class="summary-card__item" role="listitem">Expenses: <span class="summary-card__value summary-card__value--negative" id="traditional-expenses" aria-label="Traditional student expenses">₱0.00</span></p>
+              <p class="summary-card__item summary-card__item--balance" role="listitem">Remaining Balance: <span class="summary-card__value" id="traditional-balance" aria-label="Traditional student remaining balance">₱0.00</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="summary-card h-100" role="region" aria-labelledby="online-summary-title">
+            <h3 id="online-summary-title" class="summary-card__title">MMDC Online Student</h3>
+            <div role="list" aria-label="Online student financial breakdown">
+              <p class="summary-card__item" role="listitem">Income: <span class="summary-card__value" id="online-income" aria-label="Online student income">₱0.00</span></p>
+              <p class="summary-card__item" role="listitem">Expenses: <span class="summary-card__value summary-card__value--negative" id="online-expenses" aria-label="Online student expenses">₱0.00</span></p>
+              <p class="summary-card__item summary-card__item--balance" role="listitem">Remaining Balance: <span class="summary-card__value" id="online-balance" aria-label="Online student remaining balance">₱0.00</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer mt-5 py-4 text-center">
+    <div class="container">
+      <p class="footer__text mb-2">© 2025 Wise MMDC. Helping Filipino students make informed financial decisions.</p>
+      <p class="footer__text small opacity-75 mb-0">
+        🔒 <strong>Privacy Notice:</strong> No personal information is collected or stored. Compliant with RA 10173 (Data Privacy Act of 2012).
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * ====================================
+     * Wise MMDC Calculator - Enhanced Version
+     * Group 13 - MO-IT120 Web Systems and Technology
+     * 
+     * Features:
+     * - Enhanced input validation
+     * - Error handling and user feedback
+     * - Accessibility improvements
+     * - Performance optimizations
+     * ====================================
+     */
+
+    // Global variables
+    let customFieldCounter = 0;
+
+    /**
+     * LocalStorageManager Class
+     * Handles saving and restoring calculator data
+     */
+    class LocalStorageManager {
+      constructor() {
+        this.storageKey = 'wiseMMDC_calculator_data';
+        this.autoSaveDelay = 1000; // 1 second delay for auto-save
+        this.autoSaveTimer = null;
+        this.isDataLoaded = false;
+      }
+
+      /**
+       * Save all calculator data to localStorage
+       */
+      saveData() {
+        try {
+          const data = {
+            timestamp: new Date().toISOString(),
+            version: '1.0',
+            income: {
+              allowance: document.getElementById('allowance').value || '',
+              parttime: document.getElementById('parttime').value || ''
+            },
+            traditional: this.getExpenseData('traditional'),
+            online: this.getExpenseData('online'),
+            customFields: this.getCustomFieldsData(),
+            customFieldCounter: customFieldCounter
+          };
+
+          localStorage.setItem(this.storageKey, JSON.stringify(data));
+          this.showSaveIndicator('Data saved automatically');
+          console.log('✅ Calculator data saved to localStorage');
+        } catch (error) {
+          console.error('❌ Failed to save data:', error);
+          this.showSaveIndicator('Failed to save data', 'error');
+        }
+      }
+
+      /**
+       * Load data from localStorage
+       */
+      loadData() {
+        try {
+          const savedData = localStorage.getItem(this.storageKey);
+          if (!savedData) {
+            console.log('ℹ️ No saved data found');
+            return false;
+          }
+
+          const data = JSON.parse(savedData);
+          
+          // Check if data is recent (within 30 days)
+          const dataAge = new Date() - new Date(data.timestamp);
+          if (dataAge > 30 * 24 * 60 * 60 * 1000) {
+            console.log('ℹ️ Saved data is too old, clearing...');
+            this.clearData();
+            return false;
+          }
+
+          // Restore income data
+          document.getElementById('allowance').value = data.income.allowance || '';
+          document.getElementById('parttime').value = data.income.parttime || '';
+
+          // Restore expense data
+          this.restoreExpenseData('traditional', data.traditional);
+          this.restoreExpenseData('online', data.online);
+
+          // Restore custom fields
+          if (data.customFields) {
+            this.restoreCustomFields(data.customFields);
+          }
+
+          // Restore custom field counter
+          if (data.customFieldCounter) {
+            customFieldCounter = data.customFieldCounter;
+          }
+
+          this.isDataLoaded = true;
+          this.showSaveIndicator('Previous data restored', 'success');
+          console.log('✅ Calculator data restored from localStorage');
+          
+          // Recalculate totals after loading
+          setTimeout(() => {
+            calculator.calculateTotals();
+          }, 100);
+
+          return true;
+        } catch (error) {
+          console.error('❌ Failed to load data:', error);
+          this.showSaveIndicator('Failed to load saved data', 'error');
+          return false;
+        }
+      }
+
+      /**
+       * Get expense data for a specific type
+       * @param {string} type - 'traditional' or 'online'
+       * @returns {Object} - Expense data
+       */
+      getExpenseData(type) {
+        const inputs = document.querySelectorAll(`.expense-input[data-type="${type}"]`);
+        const data = {};
+
+        inputs.forEach((input, index) => {
+          const fieldContainer = input.closest('.form-section__group');
+          const fieldKey = fieldContainer.dataset.field || `field_${index}`;
+          const label = fieldContainer.querySelector('.editable-label');
+          
+          data[fieldKey] = {
+            value: input.value || '',
+            label: label ? label.textContent : '',
+            originalLabel: label ? label.dataset.original : ''
+          };
+        });
+
+        return data;
+      }
+
+      /**
+       * Restore expense data for a specific type
+       * @param {string} type - 'traditional' or 'online'
+       * @param {Object} data - Expense data to restore
+       */
+      restoreExpenseData(type, data) {
+        if (!data) return;
+
+        const inputs = document.querySelectorAll(`.expense-input[data-type="${type}"]`);
+        
+        inputs.forEach((input, index) => {
+          const fieldContainer = input.closest('.form-section__group');
+          const fieldKey = fieldContainer.dataset.field || `field_${index}`;
+          
+          if (data[fieldKey]) {
+            input.value = data[fieldKey].value || '';
+            
+            const label = fieldContainer.querySelector('.editable-label');
+            if (label && data[fieldKey].label) {
+              label.textContent = data[fieldKey].label;
+              if (data[fieldKey].originalLabel) {
+                label.dataset.original = data[fieldKey].originalLabel;
+              }
+            }
+          }
+        });
+      }
+
+      /**
+       * Get custom fields data
+       * @returns {Array} - Custom fields data
+       */
+      getCustomFieldsData() {
+        const customFields = document.querySelectorAll('.custom-field');
+        const data = [];
+
+        customFields.forEach(field => {
+          const input = field.querySelector('.expense-input');
+          const label = field.querySelector('.editable-label');
+          
+          if (input && label) {
+            data.push({
+              type: input.dataset.type,
+              value: input.value || '',
+              label: label.textContent || '',
+              originalLabel: label.dataset.original || '',
+              fieldKey: field.dataset.field
+            });
+          }
+        });
+
+        return data;
+      }
+
+      /**
+       * Restore custom fields
+       * @param {Array} customFieldsData - Custom fields data to restore
+       */
+      restoreCustomFields(customFieldsData) {
+        if (!customFieldsData || !Array.isArray(customFieldsData)) return;
+
+        // Clear existing custom fields
+        document.querySelectorAll('.custom-field').forEach(field => field.remove());
+
+        // Restore each custom field
+        customFieldsData.forEach(fieldData => {
+          this.addCustomFieldFromData(fieldData);
+        });
+      }
+
+      /**
+       * Add custom field from saved data
+       * @param {Object} fieldData - Field data to restore
+       */
+      addCustomFieldFromData(fieldData) {
+        const containerId = fieldData.type === 'traditional' ? 'traditional-fields' : 'online-fields';
+        const container = document.getElementById(containerId);
+        
+        if (!container) return;
+
+        const newField = document.createElement('div');
+        newField.className = 'form-section__group custom-field mb-3';
+        newField.dataset.field = fieldData.fieldKey;
+        
+        newField.innerHTML = `
+          <div class="field-header">
+            <label class="form-label form-section__label editable-label" 
+                   contenteditable="true" 
+                   data-original="${fieldData.originalLabel || fieldData.label}">${fieldData.label}</label>
+            <button type="button" class="btn btn-sm btn-danger btn-delete-field" onclick="removeExpenseField(this)">✕</button>
+          </div>
+          <input type="number" 
+                 class="form-control form-section__input expense-input" 
+                 data-type="${fieldData.type}" 
+                 placeholder="0" 
+                 value="${fieldData.value}">
+        `;
+        
+        container.appendChild(newField);
+        
+        // Add event listeners to new field
+        const newInput = newField.querySelector('.expense-input');
+        const newLabel = newField.querySelector('.editable-label');
+        
+        newInput.addEventListener('input', (e) => calculator.handleInputChange(e));
+        newInput.addEventListener('blur', (e) => calculator.validateInput(e.target));
+        newInput.addEventListener('focus', (e) => calculator.clearInputError(e.target));
+        
+        newLabel.addEventListener('focus', (e) => calculator.handleLabelFocus(e));
+        newLabel.addEventListener('blur', (e) => calculator.handleLabelBlur(e));
+        newLabel.addEventListener('keydown', (e) => calculator.handleLabelKeydown(e));
+      }
+
+      /**
+       * Clear all saved data
+       */
+      clearData() {
+        try {
+          localStorage.removeItem(this.storageKey);
+          this.showSaveIndicator('Data cleared', 'success');
+          console.log('✅ Calculator data cleared from localStorage');
+        } catch (error) {
+          console.error('❌ Failed to clear data:', error);
+          this.showSaveIndicator('Failed to clear data', 'error');
+        }
+      }
+
+      /**
+       * Check if there's saved data
+       * @returns {boolean} - Whether saved data exists
+       */
+      hasSavedData() {
+        return localStorage.getItem(this.storageKey) !== null;
+      }
+
+      /**
+       * Auto-save with debouncing
+       */
+      scheduleAutoSave() {
+        if (this.autoSaveTimer) {
+          clearTimeout(this.autoSaveTimer);
+        }
+        
+        this.autoSaveTimer = setTimeout(() => {
+          this.saveData();
+        }, this.autoSaveDelay);
+      }
+
+      /**
+       * Show save indicator
+       * @param {string} message - Message to show
+       * @param {string} type - Type of message ('success', 'error', 'info')
+       */
+      showSaveIndicator(message, type = 'info') {
+        // Remove existing indicator
+        const existingIndicator = document.getElementById('save-indicator');
+        if (existingIndicator) {
+          existingIndicator.remove();
+        }
+
+        const indicator = document.createElement('div');
+        indicator.id = 'save-indicator';
+        indicator.textContent = message;
+        
+        const colors = {
+          success: '#28a745',
+          error: '#E31E24',
+          info: '#007bff'
+        };
+        
+        indicator.style.cssText = `
+          position: fixed;
+          top: 20px;
+          left: 20px;
+          background: ${colors[type]};
+          color: white;
+          padding: 8px 16px;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          z-index: 9999;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        `;
+        
+        document.body.appendChild(indicator);
+        
+        // Fade in
+        setTimeout(() => {
+          indicator.style.opacity = '1';
+        }, 10);
+        
+        // Fade out and remove
+        setTimeout(() => {
+          indicator.style.opacity = '0';
+          setTimeout(() => {
+            if (indicator.parentNode) {
+              indicator.remove();
+            }
+          }, 300);
+        }, 2000);
+      }
+    }
+
+    // Create localStorage manager instance
+    const localStorageManager = new LocalStorageManager();
+
+    /**
+     * Enhanced Calculator Class
+     * Handles all calculator functionality with improved error handling
+     */
+    class EnhancedCalculator {
+      constructor() {
+        this.isInitialized = false;
+        this.cachedElements = new Map();
+        this.validationRules = {
+          minValue: 0,
+          maxValue: 999999,
+          maxDecimals: 2
+        };
+      }
+
+      /**
+       * Initialize the calculator
+       */
+      init() {
+        if (this.isInitialized) return;
+        
+        try {
+          this.setupEventListeners();
+          this.validateInitialState();
+          
+          // Load saved data if available
+          const dataLoaded = localStorageManager.loadData();
+          
+          this.isInitialized = true;
+          console.log('✅ Enhanced Calculator initialized successfully');
+        } catch (error) {
+          console.error('❌ Failed to initialize calculator:', error);
+          this.showError('Calculator initialization failed. Please refresh the page.');
+        }
+      }
+
+      /**
+       * Setup all event listeners
+       */
+      setupEventListeners() {
+        // Add event listeners to all number inputs
+        const allInputs = document.querySelectorAll('input[type="number"]');
+        allInputs.forEach(input => {
+          input.addEventListener('input', (e) => this.handleInputChange(e));
+          input.addEventListener('blur', (e) => this.validateInput(e.target));
+          input.addEventListener('focus', (e) => this.clearInputError(e.target));
+        });
+
+        // Add event listeners to editable labels
+        const editableLabels = document.querySelectorAll('.editable-label');
+        editableLabels.forEach(label => {
+          label.addEventListener('focus', (e) => this.handleLabelFocus(e));
+          label.addEventListener('blur', (e) => this.handleLabelBlur(e));
+          label.addEventListener('keydown', (e) => this.handleLabelKeydown(e));
+        });
+
+        // Check for sample data URL parameter
+        this.checkForSampleData();
+      }
+
+      /**
+       * Handle input changes with validation
+       * @param {Event} event - The input event
+       */
+      handleInputChange(event) {
+        const input = event.target;
+        
+        try {
+          // Validate input value
+          const isValid = this.validateInputValue(input.value);
+          
+          if (!isValid) {
+            this.showInputError(input, 'Please enter a valid number');
+            return;
+          }
+
+          // Clear any existing errors
+          this.clearInputError(input);
+          
+          // Calculate totals
+          this.calculateTotals();
+          
+          // Schedule auto-save
+          localStorageManager.scheduleAutoSave();
+          
+        } catch (error) {
+          console.error('Error handling input change:', error);
+          this.showInputError(input, 'Invalid input');
+        }
+      }
+
+      /**
+       * Validate input value
+       * @param {string} value - The input value to validate
+       * @returns {boolean} - Whether the value is valid
+       */
+      validateInputValue(value) {
+        if (value === '' || value === null || value === undefined) {
+          return true; // Empty values are allowed
+        }
+
+        const numValue = parseFloat(value);
+        
+        // Check if it's a valid number
+        if (isNaN(numValue)) {
+          return false;
+        }
+
+        // Check range
+        if (numValue < this.validationRules.minValue || numValue > this.validationRules.maxValue) {
+          return false;
+        }
+
+        // Check decimal places
+        const decimalPlaces = (value.toString().split('.')[1] || '').length;
+        if (decimalPlaces > this.validationRules.maxDecimals) {
+          return false;
+        }
+
+        return true;
+      }
+
+      /**
+       * Validate input field
+       * @param {HTMLInputElement} input - The input element
+       */
+      validateInput(input) {
+        const value = input.value.trim();
+        
+        if (value === '') {
+          this.clearInputError(input);
+          return;
+        }
+
+        const isValid = this.validateInputValue(value);
+        
+        if (!isValid) {
+          this.showInputError(input, 'Please enter a valid number (0-999,999 with max 2 decimals)');
+        } else {
+          this.clearInputError(input);
+        }
+      }
+
+      /**
+       * Show input error
+       * @param {HTMLInputElement} input - The input element
+       * @param {string} message - The error message
+       */
+      showInputError(input, message) {
+        this.clearInputError(input);
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'input-error';
+        errorDiv.textContent = message;
+        errorDiv.style.cssText = `
+          color: #E31E24;
+          font-size: 0.8rem;
+          margin-top: 4px;
+          font-weight: 500;
+        `;
+        
+        input.parentNode.appendChild(errorDiv);
+        input.style.borderColor = '#E31E24';
+        input.setAttribute('aria-invalid', 'true');
+      }
+
+      /**
+       * Clear input error
+       * @param {HTMLInputElement} input - The input element
+       */
+      clearInputError(input) {
+        const existingError = input.parentNode.querySelector('.input-error');
+        if (existingError) {
+          existingError.remove();
+        }
+        input.style.borderColor = '';
+        input.removeAttribute('aria-invalid');
+      }
+
+      /**
+       * Handle label focus
+       * @param {Event} event - The focus event
+       */
+      handleLabelFocus(event) {
+        event.target.style.outline = '2px solid #007bff';
+        event.target.setAttribute('aria-label', 'Editing label. Press Enter to save, Escape to cancel.');
+      }
+
+      /**
+       * Handle label blur
+       * @param {Event} event - The blur event
+       */
+      handleLabelBlur(event) {
+        const label = event.target;
+        label.style.outline = 'none';
+        label.removeAttribute('aria-label');
+        
+        // Prevent empty labels
+        if (label.textContent.trim() === '') {
+          label.textContent = label.dataset.original || 'New Expense';
+        }
+        
+        // Schedule auto-save when label is edited
+        localStorageManager.scheduleAutoSave();
+      }
+
+      /**
+       * Handle label keydown
+       * @param {Event} event - The keydown event
+       */
+      handleLabelKeydown(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          event.target.blur();
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          event.target.textContent = event.target.dataset.original || 'New Expense';
+          event.target.blur();
+        }
+      }
+
+      /**
+       * Validate initial state
+       */
+      validateInitialState() {
+        const requiredElements = [
+          '#allowance',
+          '#parttime',
+          '#traditional-total',
+          '#online-total',
+          '#income-total'
+        ];
+
+        requiredElements.forEach(selector => {
+          const element = document.querySelector(selector);
+          if (!element) {
+            throw new Error(`Required element not found: ${selector}`);
+          }
+        });
+      }
+
+      /**
+       * Check for sample data URL parameter
+       */
+      checkForSampleData() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('sample') === 'true') {
+          setTimeout(() => {
+            loadSampleData();
+          }, 300);
+        }
+      }
+
+      /**
+       * Show error message to user
+       * @param {string} message - The error message
+       */
+      showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger';
+        errorDiv.innerHTML = `
+          <strong>Error:</strong> ${message}
+          <button type="button" class="btn-close" onclick="this.parentElement.remove()" aria-label="Close"></button>
+        `;
+        errorDiv.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 9999;
+          max-width: 400px;
+        `;
+        document.body.appendChild(errorDiv);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          if (errorDiv.parentNode) {
+            errorDiv.remove();
+          }
+        }, 5000);
+      }
+
+      /**
+       * Calculate totals with error handling
+       */
+      calculateTotals() {
+        try {
+          // Calculate income with validation
+          const allowance = this.safeParseFloat(document.getElementById('allowance').value);
+          const parttime = this.safeParseFloat(document.getElementById('parttime').value);
+          const totalIncome = allowance + parttime;
+          
+          // Update income display
+          const incomeTotalElement = document.getElementById('income-total');
+          if (incomeTotalElement) {
+            incomeTotalElement.textContent = `Total Monthly Income: ₱${formatNumber(totalIncome)}`;
+          }
+
+          // Calculate traditional expenses
+          const traditionalTotal = this.calculateExpenseTotal('traditional');
+          const traditionalTotalElement = document.getElementById('traditional-total');
+          if (traditionalTotalElement) {
+            traditionalTotalElement.textContent = `Total Monthly Expenses: ₱${formatNumber(traditionalTotal)}`;
+          }
+
+          // Calculate online expenses
+          const onlineTotal = this.calculateExpenseTotal('online');
+          const onlineTotalElement = document.getElementById('online-total');
+          if (onlineTotalElement) {
+            onlineTotalElement.textContent = `Total Monthly Expenses: ₱${formatNumber(onlineTotal)}`;
+          }
+
+          // Update summary cards
+          this.updateSummaryCards(totalIncome, traditionalTotal, onlineTotal);
+          
+        } catch (error) {
+          console.error('Error calculating totals:', error);
+          this.showError('Error calculating totals. Please check your inputs.');
+        }
+      }
+
+      /**
+       * Safely parse float with validation
+       * @param {string} value - The value to parse
+       * @returns {number} - The parsed number or 0
+       */
+      safeParseFloat(value) {
+        if (!value || value === '') return 0;
+        
+        const parsed = parseFloat(value);
+        if (isNaN(parsed)) {
+          console.warn('Invalid number:', value);
+          return 0;
+        }
+        
+        // Check range
+        if (parsed < 0 || parsed > 999999) {
+          console.warn('Number out of range:', parsed);
+          return 0;
+        }
+        
+        return parsed;
+      }
+
+      /**
+       * Calculate total for specific expense type
+       * @param {string} type - The expense type ('traditional' or 'online')
+       * @returns {number} - The total amount
+       */
+      calculateExpenseTotal(type) {
+        const inputs = document.querySelectorAll(`.expense-input[data-type="${type}"]`);
+        let total = 0;
+        
+        inputs.forEach(input => {
+          const value = this.safeParseFloat(input.value);
+          total += value;
+        });
+        
+        return total;
+      }
+
+      /**
+       * Update summary cards
+       * @param {number} totalIncome - Total income
+       * @param {number} traditionalTotal - Traditional expenses total
+       * @param {number} onlineTotal - Online expenses total
+       */
+      updateSummaryCards(totalIncome, traditionalTotal, onlineTotal) {
+        // Traditional student summary
+        const traditionalIncomeElement = document.getElementById('traditional-income');
+        const traditionalExpensesElement = document.getElementById('traditional-expenses');
+        const traditionalBalanceElement = document.getElementById('traditional-balance');
+        
+        if (traditionalIncomeElement) {
+          traditionalIncomeElement.textContent = `₱${formatNumber(totalIncome)}`;
+        }
+        if (traditionalExpensesElement) {
+          traditionalExpensesElement.textContent = `₱${formatNumber(traditionalTotal)}`;
+        }
+        if (traditionalBalanceElement) {
+          const traditionalBalance = totalIncome - traditionalTotal;
+          traditionalBalanceElement.textContent = `₱${formatNumber(traditionalBalance)}`;
+          
+          // Add visual indicator for negative balance
+          if (traditionalBalance < 0) {
+            traditionalBalanceElement.style.color = '#E31E24';
+            traditionalBalanceElement.setAttribute('aria-label', 'Negative balance: You would need additional funds');
+          } else {
+            traditionalBalanceElement.style.color = '';
+            traditionalBalanceElement.removeAttribute('aria-label');
+          }
+        }
+
+        // Online student summary
+        const onlineIncomeElement = document.getElementById('online-income');
+        const onlineExpensesElement = document.getElementById('online-expenses');
+        const onlineBalanceElement = document.getElementById('online-balance');
+        
+        if (onlineIncomeElement) {
+          onlineIncomeElement.textContent = `₱${formatNumber(totalIncome)}`;
+        }
+        if (onlineExpensesElement) {
+          onlineExpensesElement.textContent = `₱${formatNumber(onlineTotal)}`;
+        }
+        if (onlineBalanceElement) {
+          const onlineBalance = totalIncome - onlineTotal;
+          onlineBalanceElement.textContent = `₱${formatNumber(onlineBalance)}`;
+          
+          // Add visual indicator for negative balance
+          if (onlineBalance < 0) {
+            onlineBalanceElement.style.color = '#E31E24';
+            onlineBalanceElement.setAttribute('aria-label', 'Negative balance: You would need additional funds');
+          } else {
+            onlineBalanceElement.style.color = '';
+            onlineBalanceElement.removeAttribute('aria-label');
+          }
+        }
+      }
+    }
+
+    // Create calculator instance
+    const calculator = new EnhancedCalculator();
+
+    // Format number with commas and validation
+    function formatNumber(num) {
+      // Validate input
+      if (isNaN(num) || num === null || num === undefined) {
+        return '0.00';
+      }
+      
+      // Ensure it's a number
+      const number = parseFloat(num);
+      
+      // Check for valid range
+      if (number < 0 || number > 999999) {
+        console.warn('Number out of range:', number);
+        return '0.00';
+      }
+      
+      return number.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // Global calculateTotals function for backward compatibility
+    function calculateTotals() {
+      calculator.calculateTotals();
+    }
+
+    // Load Traditional Student Only
+    function loadTraditionalOnly() {
+      // Clear all custom fields first
+      document.querySelectorAll('.custom-field').forEach(field => field.remove());
+      
+      // Set income
+      document.getElementById('allowance').value = 27000;
+      document.getElementById('parttime').value = 0;
+      
+      // Set Traditional Student Expenses
+      const traditionalFields = document.querySelectorAll('#traditional-fields .expense-input');
+      if (traditionalFields.length >= 4) {
+        traditionalFields[0].value = 1000; // Transportation
+        traditionalFields[1].value = 6000; // Monthly Food Allowance
+        traditionalFields[2].value = 1000; // School Supplies
+        traditionalFields[3].value = 1500; // Hangouts/Social
+      }
+      
+      // Update Traditional field labels
+      const traditionalLabels = document.querySelectorAll('#traditional-fields .editable-label');
+      if (traditionalLabels[0]) {
+        traditionalLabels[0].textContent = 'Transportation | Carry your ID to avail of discounted fares';
+        traditionalLabels[0].dataset.original = 'Transportation | Carry your ID to avail of discounted fares';
+      }
+      
+      // Clear Online Student Expenses
+      const onlineFields = document.querySelectorAll('#online-fields .expense-input');
+      onlineFields.forEach(field => field.value = '');
+      
+      // Add custom field for Traditional: Tuition Fee
+      addCustomFieldWithData('traditional', 'Tuition Fee Traditional', 7000);
+      
+      // Recalculate totals
+      calculateTotals();
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+      
+      // Show success message
+      alert('✅ Traditional Student sample data loaded!');
+    }
+
+    // Load Online Student Only
+    function loadOnlineOnly() {
+      // Clear all custom fields first
+      document.querySelectorAll('.custom-field').forEach(field => field.remove());
+      
+      // Set income
+      document.getElementById('allowance').value = 27000;
+      document.getElementById('parttime').value = 0;
+      
+      // Clear Traditional Student Expenses
+      const traditionalFields = document.querySelectorAll('#traditional-fields .expense-input');
+      traditionalFields.forEach(field => field.value = '');
+      
+      // Set Online Student Expenses
+      const onlineFields = document.querySelectorAll('#online-fields .expense-input');
+      if (onlineFields.length >= 3) {
+        onlineFields[0].value = 1499; // Internet Plan
+        onlineFields[1].value = 1000; // Occasional Café
+        onlineFields[2].value = 200;  // Digital Tools/Software
+      }
+      
+      // Update Online field labels
+      const onlineLabels = document.querySelectorAll('#online-fields .editable-label');
+      if (onlineLabels[1]) {
+        onlineLabels[1].textContent = 'Occasional Café | The public library is free and offers internet access';
+        onlineLabels[1].dataset.original = 'Occasional Café | The public library is free and offers internet access';
+      }
+      if (onlineLabels[2]) {
+        onlineLabels[2].textContent = 'Digital tools and software offer discounts when purchased with a .edu email address';
+        onlineLabels[2].dataset.original = 'Digital tools and software offer discounts when purchased with a .edu email address';
+      }
+      
+      // Add custom field for Online: Tuition Fee
+      addCustomFieldWithData('online', 'Tuition Fee Installment for 3 months | Term 1 | 9 Units in MMDC', 5878);
+      
+      // Recalculate totals
+      calculateTotals();
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+      
+      // Show success message
+      alert('✅ MMDC Online Student sample data loaded!');
+    }
+
+    // Load Sample Data (Both)
+    function loadSampleData() {
+      // Clear all custom fields first
+      document.querySelectorAll('.custom-field').forEach(field => field.remove());
+      
+      // Set income
+      document.getElementById('allowance').value = 27000;
+      document.getElementById('parttime').value = 0;
+      
+      // Set Traditional Student Expenses
+      const traditionalFields = document.querySelectorAll('#traditional-fields .expense-input');
+      if (traditionalFields.length >= 4) {
+        traditionalFields[0].value = 1000; // Transportation
+        traditionalFields[1].value = 6000; // Monthly Food Allowance
+        traditionalFields[2].value = 1000; // School Supplies
+        traditionalFields[3].value = 1500; // Hangouts/Social
+      }
+      
+      // Update Traditional field labels with helpful clues
+      const traditionalLabels = document.querySelectorAll('#traditional-fields .editable-label');
+      if (traditionalLabels[0]) {
+        traditionalLabels[0].textContent = 'Transportation | Carry your ID to avail of discounted fares';
+        traditionalLabels[0].dataset.original = 'Transportation | Carry your ID to avail of discounted fares';
+      }
+      
+      // Set Online Student Expenses (no electricity field)
+      const onlineFields = document.querySelectorAll('#online-fields .expense-input');
+      if (onlineFields.length >= 3) {
+        onlineFields[0].value = 1499; // Internet Plan
+        onlineFields[1].value = 1000; // Occasional Café
+        onlineFields[2].value = 200;  // Digital Tools/Software
+      }
+      
+      // Update Online field labels with helpful clues
+      const onlineLabels = document.querySelectorAll('#online-fields .editable-label');
+      if (onlineLabels[1]) {
+        onlineLabels[1].textContent = 'Occasional Café | The public library is free and offers internet access';
+        onlineLabels[1].dataset.original = 'Occasional Café | The public library is free and offers internet access';
+      }
+      if (onlineLabels[2]) {
+        onlineLabels[2].textContent = 'Digital tools and software offer discounts when purchased with a .edu email address';
+        onlineLabels[2].dataset.original = 'Digital tools and software offer discounts when purchased with a .edu email address';
+      }
+      
+      // Add custom field for Traditional: Tuition Fee
+      addCustomFieldWithData('traditional', 'Tuition Fee Traditional', 7000);
+      
+      // Add custom field for Online: Tuition Fee
+      addCustomFieldWithData('online', 'Tuition Fee Installment for 3 months | Term 1 | 9 Units in MMDC', 5878);
+      
+      // Recalculate totals
+      calculateTotals();
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+      
+      // Show success message
+      alert('✅ Sample data loaded! Compare Traditional vs Online student expenses.');
+    }
+
+    // Add custom field with data
+    function addCustomFieldWithData(type, labelText, value) {
+      customFieldCounter++;
+      const containerId = type === 'traditional' ? 'traditional-fields' : 'online-fields';
+      const container = document.getElementById(containerId);
+      
+      const newField = document.createElement('div');
+      newField.className = 'form-section__group custom-field mb-3';
+      newField.dataset.field = `custom-${customFieldCounter}`;
+      
+      newField.innerHTML = `
+        <div class="field-header">
+          <label class="form-label form-section__label editable-label" contenteditable="true" data-original="${labelText}">${labelText}</label>
+          <button type="button" class="btn btn-sm btn-danger btn-delete-field" onclick="removeExpenseField(this)">✕</button>
+        </div>
+        <input type="number" class="form-control form-section__input expense-input" data-type="${type}" placeholder="0" value="${value}">
+      `;
+      
+      container.appendChild(newField);
+      
+      // Add event listener to new input
+      const newInput = newField.querySelector('.expense-input');
+      const newLabel = newField.querySelector('.editable-label');
+      
+      newInput.addEventListener('input', (e) => calculator.handleInputChange(e));
+      newInput.addEventListener('blur', (e) => calculator.validateInput(e.target));
+      newInput.addEventListener('focus', (e) => calculator.clearInputError(e.target));
+      
+      newLabel.addEventListener('focus', (e) => calculator.handleLabelFocus(e));
+      newLabel.addEventListener('blur', (e) => calculator.handleLabelBlur(e));
+      newLabel.addEventListener('keydown', (e) => calculator.handleLabelKeydown(e));
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+    }
+
+    // Add new expense field
+    function addExpenseField(type) {
+      customFieldCounter++;
+      const containerId = type === 'traditional' ? 'traditional-fields' : 'online-fields';
+      const container = document.getElementById(containerId);
+      
+      const newField = document.createElement('div');
+      newField.className = 'form-section__group custom-field mb-3';
+      newField.dataset.field = `custom-${customFieldCounter}`;
+      
+      newField.innerHTML = `
+        <div class="field-header">
+          <label class="form-label form-section__label editable-label" contenteditable="true" data-original="New Expense">New Expense</label>
+          <button type="button" class="btn btn-sm btn-danger btn-delete-field" onclick="removeExpenseField(this)">✕</button>
+        </div>
+        <input type="number" class="form-control form-section__input expense-input" data-type="${type}" placeholder="0">
+      `;
+      
+      container.appendChild(newField);
+      
+      // Add event listener to new input
+      const newInput = newField.querySelector('.expense-input');
+      const newLabel = newField.querySelector('.editable-label');
+      
+      newInput.addEventListener('input', (e) => calculator.handleInputChange(e));
+      newInput.addEventListener('blur', (e) => calculator.validateInput(e.target));
+      newInput.addEventListener('focus', (e) => calculator.clearInputError(e.target));
+      
+      newLabel.addEventListener('focus', (e) => calculator.handleLabelFocus(e));
+      newLabel.addEventListener('blur', (e) => calculator.handleLabelBlur(e));
+      newLabel.addEventListener('keydown', (e) => calculator.handleLabelKeydown(e));
+      
+      // Focus on the new label for immediate editing
+      newLabel.focus();
+      
+      // Schedule auto-save
+      localStorageManager.scheduleAutoSave();
+    }
+
+    // Remove expense field
+    function removeExpenseField(button) {
+      const field = button.closest('.form-section__group');
+      field.remove();
+      calculateTotals();
+      
+      // Schedule auto-save after removing field
+      localStorageManager.scheduleAutoSave();
+    }
+
+    // Initialize calculator when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        calculator.init();
+        console.log('🎓 Calculator initialized successfully!');
+      } catch (error) {
+        console.error('❌ Failed to initialize calculator:', error);
+      }
+    });
+  </script>
+
+  <!-- Bootstrap JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+  
+  <!-- Additional CSS for Local Storage Features -->
+  <style>
+    /* Prevent parent from clipping rounded input borders */
+    .form-section { overflow: visible; }
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .btn-delete-field {
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      line-height: 1;
+      border-radius: 4px;
+    }
+    
+    .custom-field {
+      border: none;                 /* no decorative borders that can clip */
+      padding: 0;                   /* align with other groups */
+      margin: 0 0 20px !important;  /* same spacing as .form-section__group */
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .custom-field .form-section__input {
+      box-sizing: border-box;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    
+    #save-indicator {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+  </style>
+</body>
+</html>

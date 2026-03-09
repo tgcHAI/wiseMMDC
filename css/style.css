@@ -1,0 +1,940 @@
+/* Wise MMDC Interactive Enhancements Group 13 MO-IT161 H3101
+Group Members:
+- John Paul P.
+- Reinard R.
+- JHAERSN C.
+- Jubiler P.
+*/
+
+
+/* --- Color Variables from Wise MMDC Logo --- */
+:root {
+  --primary-navy: #1B4F91;
+  --primary-red: #E31E24;
+  --primary-gold: #F9B233;
+  --secondary-gray: #A8A8A8;
+  --light-gray: #C4C4C4;
+  --bg-light: #f8f9fa;
+  --text-dark: #333;
+  --white: #ffffff;
+}
+
+/* --- General & Global Styles --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: var(--bg-light);
+}
+
+/* Calculator page specific background */
+body:has(.calculator-container) {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  min-height: 100vh;
+}
+
+/* --- Reusable Components --- */
+.button {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.button--primary {
+  background-color: var(--primary-navy);
+  color: var(--white) !important;
+  border-color: var(--primary-navy);
+}
+.button--primary:hover {
+  background-color: #143a6b;
+  border-color: #143a6b;
+  color: var(--white) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 79, 145, 0.3);
+}
+
+.button--secondary {
+  background-color: var(--white);
+  color: var(--primary-navy) !important;
+  border-color: var(--primary-navy);
+}
+.button--secondary:hover {
+  background-color: var(--primary-navy);
+  color: var(--white) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 79, 145, 0.2);
+}
+
+/* --- Header & Navigation --- */
+.header {
+  background-color: var(--white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 0.3rem 0;
+}
+
+/* Bootstrap Navbar Customization */
+.header .navbar {
+  background-color: var(--white);
+  padding: 0.3rem 5%;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-navy);
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.header__logo:hover {
+  transform: scale(1.05);
+}
+
+.header__logo-img {
+  height: 80px;
+  width: auto;
+  display: block;
+}
+
+.header__logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-navy);
+}
+
+.nav__list {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+.nav__link {
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav__link:hover {
+  color: var(--primary-navy);
+  background-color: rgba(27, 79, 145, 0.1);
+}
+
+.nav__link--active,
+.nav__link.active {
+  color: var(--white) !important;
+  background-color: var(--primary-navy) !important;
+}
+
+/* Bootstrap Navbar Toggler Custom Colors */
+.navbar-toggler {
+  border-color: var(--primary-navy);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.25rem rgba(27, 79, 145, 0.25);
+}
+
+/* Ensure white text on blue backgrounds */
+.hero,
+.hero .hero__title,
+.hero .hero__subtitle,
+.article__header,
+.article__header *,
+.summary__title {
+  color: var(--white) !important;
+}
+
+/* Hero buttons should maintain their intended colors */
+.hero .button--primary,
+.hero .btn-primary {
+  background-color: var(--primary-navy) !important;
+  color: var(--white) !important;
+  border-color: var(--primary-navy) !important;
+}
+
+.hero .button--secondary,
+.hero .btn-outline-primary {
+  background-color: var(--white) !important;
+  color: var(--primary-navy) !important;
+  border-color: var(--white) !important;
+}
+
+.hero .button--secondary:hover,
+.hero .btn-outline-primary:hover {
+  background-color: var(--primary-navy) !important;
+  color: var(--white) !important;
+  border-color: var(--white) !important;
+}
+
+/* Override Bootstrap's text-muted on blue backgrounds */
+.article__header .text-muted {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Keep summary card content dark (white background) */
+.summary-card,
+.summary-card * {
+  color: var(--text-dark) !important;
+}
+
+.summary-card__title {
+  color: var(--primary-navy) !important;
+}
+
+.summary-card__value--negative {
+  color: var(--primary-red) !important;
+}
+
+.summary-card__item--balance {
+  color: var(--primary-navy) !important;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 2.5rem 5%;
+  margin-top: 40px;
+  background-color: var(--primary-navy);
+  color: var(--white);
+}
+
+.footer__text {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* --- Hero Section (index.html) --- */
+.hero {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, var(--primary-navy) 0%, #2d6bb5 100%);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(45deg, var(--primary-gold) 10%, transparent 10%),
+    linear-gradient(-45deg, var(--primary-red) 10%, transparent 10%);
+  background-size: 20px 20px;
+  opacity: 0.05;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__title {
+  font-size: 2.8rem;
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero__subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.95;
+  line-height: 1.7;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hero__image {
+  animation: fadeInRight 0.8s ease-out;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* --- Blog Section (index.html) --- */
+.blog {
+  padding: 60px 5%;
+  background-color: var(--white);
+}
+
+.blog__title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: var(--primary-navy);
+  font-weight: 700;
+}
+
+/* Blog grid now uses Bootstrap's row system */
+.blog__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.article-card {
+  background: var(--white);
+  border: 2px solid var(--light-gray);
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: default;
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(27, 79, 145, 0.15);
+  border-color: var(--primary-navy);
+}
+
+.article-card__image-placeholder {
+  height: 180px;
+  background: linear-gradient(135deg, var(--primary-navy), var(--primary-red));
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.article-card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+}
+
+.article-card__title {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: var(--primary-navy);
+  font-weight: 700;
+}
+
+.article-card__excerpt {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.article-card__link {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--primary-red);
+  transition: color 0.3s ease;
+}
+
+.article-card__link:hover {
+  color: var(--primary-navy);
+}
+
+/* --- Article Page Styles --- */
+.article-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.article {
+  background-color: var(--white);
+  border-radius: 12px;
+  border: 2px solid var(--light-gray);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.article__header {
+  padding: 50px 40px 25px;
+  background: linear-gradient(135deg, var(--primary-navy) 0%, #2d6bb5 100%);
+  color: var(--white);
+}
+
+.article__title {
+  font-size: 2.5rem;
+  margin-bottom: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--white);
+}
+
+.article__meta {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  color: var(--white);
+}
+
+.article__content {
+  padding: 40px;
+}
+
+.article__intro {
+  font-size: 1.15rem;
+  color: var(--text-dark);
+  margin-bottom: 35px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.article__content h2 {
+  font-size: 1.8rem;
+  margin: 40px 0 20px;
+  color: var(--primary-navy);
+  font-weight: 700;
+  padding-bottom: 10px;
+}
+
+.article__content h3 {
+  font-size: 1.3rem;
+  margin: 30px 0 15px;
+  color: var(--primary-navy);
+  font-weight: 600;
+}
+
+.article__content p {
+  margin-bottom: 18px;
+  line-height: 1.8;
+}
+
+.article__quote {
+  background: linear-gradient(to right, rgba(27, 79, 145, 0.05), rgba(249, 178, 51, 0.05));
+  padding: 25px;
+  margin: 30px 0;
+  font-style: italic;
+  color: var(--text-dark);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.article__cta {
+  margin-top: 50px;
+  padding-top: 35px;
+  border-top: 2px solid var(--light-gray);
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* --- Calculator Page (calculator.html) --- */
+.calculator-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.form-section {
+  background-color: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  border: 2px solid var(--light-gray);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  border-color: var(--primary-navy);
+  box-shadow: 0 6px 20px rgba(27, 79, 145, 0.12);
+}
+
+.form-section__title {
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  color: var(--primary-navy);
+  font-weight: 700;
+  padding-bottom: 12px;
+}
+
+/* Study Mode Cards */
+.study-mode-card:hover {
+  border-color: var(--primary-navy) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(27, 79, 145, 0.2);
+}
+
+.study-mode-card:active {
+  transform: translateY(-2px);
+}
+
+.form-section__group {
+  margin-bottom: 20px;
+}
+
+.form-section__label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--primary-navy);
+}
+
+.form-section__input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--light-gray);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-section__input:focus {
+  outline: none;
+  border-color: var(--primary-navy);
+  box-shadow: 0 0 0 3px rgba(27, 79, 145, 0.1);
+}
+
+/* Income fields now use Bootstrap's row system */
+.income__fields {
+  /* Bootstrap handles the grid */
+}
+
+.form-section__total {
+  margin-top: 25px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: right;
+  color: var(--primary-navy);
+  padding-top: 18px;
+}
+
+/* Expenses grid now uses Bootstrap's row system */
+.expenses-grid {
+  /* Bootstrap handles the grid */
+}
+
+.expenses--traditional .form-section__title {
+  border-bottom-color: var(--primary-red);
+}
+
+.expenses--online .form-section__title {
+  border-bottom-color: var(--primary-gold);
+}
+
+.summary {
+  background: linear-gradient(135deg, var(--primary-navy) 0%, #2d6bb5 100%);
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  color: var(--white);
+}
+
+.summary__title {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Summary grid now uses Bootstrap's row system */
+.summary__grid {
+  /* Bootstrap handles the grid */
+}
+
+.summary-card {
+  padding: 25px;
+  background-color: var(--white);
+  border: none;
+  border-radius: 10px;
+  color: var(--text-dark);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.summary-card__title {
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  color: var(--primary-navy) !important;
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.summary-card__item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.summary-card__value--negative {
+  color: var(--primary-red);
+  font-weight: 600;
+}
+
+.summary-card__item--balance {
+  font-weight: bold;
+  margin-top: 20px;
+  padding-top: 15px;
+  font-size: 1.1rem;
+  color: var(--primary-navy);
+}
+
+/* --- Editable Labels & Custom Fields --- */
+.editable-label {
+  cursor: text;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.editable-label:hover {
+  background-color: rgba(27, 79, 145, 0.05);
+}
+
+.editable-label:focus {
+  background-color: rgba(249, 178, 51, 0.15);
+  outline: 2px solid var(--primary-gold);
+}
+
+.btn-add-field {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  background-color: rgba(249, 178, 51, 0.1);
+  color: var(--primary-navy);
+  border: 2px dashed transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-add-field:hover {
+  background-color: var(--primary-gold);
+  color: var(--white);
+  border-style: solid;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 178, 51, 0.3);
+}
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.btn-delete-field {
+  background-color: var(--primary-red);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.btn-delete-field:hover {
+  background-color: #c01419;
+  transform: scale(1.1);
+}
+
+.custom-field {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE & TABLET
+   ======================================== */
+
+/* Tablet Styles (768px and below) */
+@media screen and (max-width: 768px) {
+  
+  /* Header & Navigation */
+  .header .navbar {
+    padding: 0.4rem 3%;
+  }
+  
+  .header__logo-img {
+    height: 70px;
+  }
+  
+  .nav__list {
+    gap: 15px;
+  }
+  
+  .nav__link {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .navbar-collapse {
+    margin-top: 1rem;
+  }
+  
+  /* Hero Section */
+  .hero {
+    padding: 50px 15px;
+  }
+  
+  .hero__title {
+    font-size: 2rem;
+  }
+  
+  .hero__subtitle {
+    font-size: 1rem;
+  }
+  
+  /* Blog Grid */
+  .blog {
+    padding: 40px 3%;
+  }
+  
+  .blog__title {
+    font-size: 2rem;
+  }
+  
+  /* Article Page */
+  .article__header {
+    padding: 35px 25px 20px;
+  }
+  
+  .article__title {
+    font-size: 2rem;
+  }
+  
+  .article__content {
+    padding: 25px;
+  }
+  
+  .article__content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .article__content h3 {
+    font-size: 1.15rem;
+  }
+  
+  /* Calculator */
+  .calculator-container {
+    padding: 0 15px;
+    gap: 25px;
+  }
+  
+  /* Bootstrap handles responsive grids */
+  
+  .form-section {
+    padding: 20px;
+  }
+  
+  .form-section__title {
+    font-size: 1.3rem;
+  }
+  
+  .summary {
+    padding: 25px;
+  }
+  
+  .summary__title {
+    font-size: 1.5rem;
+  }
+  
+  /* Buttons */
+  .button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .hero__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero__actions .button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .article__cta {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .article__cta .button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  /* Footer */
+  .footer {
+    padding: 2rem 3%;
+  }
+}
+
+/* Mobile Styles (480px and below) */
+@media screen and (max-width: 480px) {
+  
+  /* Header */
+  .header .navbar {
+    padding: 0.3rem 4%;
+  }
+  
+  .header__logo-img {
+    height: 65px;
+  }
+  
+  .nav__list {
+    gap: 10px;
+  }
+  
+  .nav__link {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  /* Hero */
+  .hero {
+    padding: 40px 15px;
+  }
+  
+  .hero__title {
+    font-size: 1.6rem;
+  }
+  
+  .hero__subtitle {
+    font-size: 0.95rem;
+  }
+  
+  /* Blog */
+  .blog__title {
+    font-size: 1.7rem;
+  }
+  
+  .article-card {
+    padding: 18px;
+  }
+  
+  .article-card__image-placeholder {
+    height: 150px;
+  }
+  
+  /* Article */
+  .article__header {
+    padding: 25px 20px 15px;
+  }
+  
+  .article__title {
+    font-size: 1.6rem;
+  }
+  
+  .article__meta {
+    font-size: 0.85rem;
+  }
+  
+  .article__content {
+    padding: 20px;
+  }
+  
+  .article__intro {
+    font-size: 1rem;
+  }
+  
+  .article__content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .article__content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .article__quote {
+    padding: 18px;
+    font-size: 0.95rem;
+  }
+  
+  /* Calculator */
+  .form-section {
+    padding: 15px;
+  }
+  
+  .form-section__title {
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+  }
+  
+  .form-section__input {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+  
+  .form-section__total {
+    font-size: 1rem;
+  }
+  
+  .summary {
+    padding: 20px;
+  }
+  
+  .summary__title {
+    font-size: 1.3rem;
+  }
+  
+  .summary-card {
+    padding: 18px;
+  }
+  
+  .summary-card__title {
+    font-size: 1.1rem;
+  }
+  
+  .summary-card__item {
+    font-size: 0.9rem;
+  }
+  
+  /* Buttons */
+  .button {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+}

@@ -1,3 +1,20 @@
+/**
+ * ====================================
+ * Wise MMDC Interactive Enhancements - Group 13
+ * MO-IT120 - Web Systems and Technology
+ * 
+ * Group Members:
+ * - John Paul P. (Project Lead & Frontend Development)
+ * - Reinard R. (Documentation & Quality Assurance)
+ * - JHAERSN C. (UI/UX Design & Bootstrap Integration)
+ * - Jubiler P. (JavaScript Development & Interactive Features)
+ * ====================================
+ */
+
+/**
+ * Main Application Controller
+ * Handles initialization and coordination of all interactive features
+ */
 class WiseMMDCApp {
   constructor() {
     this.isInitialized = false;
@@ -26,6 +43,8 @@ class WiseMMDCApp {
    */
   initializeInteractiveFeatures() {
     const features = [
+      { name: 'googleAuthNav', fn: () => this.initializeGoogleAuthNav() },
+      { name: 'logoutConfirmation', fn: () => this.addLogoutConfirmation() },
       { name: 'welcomeMessage', fn: () => this.addWelcomeMessage() },
       { name: 'articleCards', fn: () => this.enhanceArticleCards() },
       { name: 'scrollToTop', fn: () => this.addScrollToTopButton() },
@@ -93,6 +112,64 @@ class WiseMMDCApp {
     }
     return this.cachedElements.get(key) || null;
   }
+
+  /**
+   *  Google auth state in navbar
+   * Shows sign in action when logged out, and profile + logout when logged in
+   */
+  async initializeGoogleAuthNav() {
+    const authLink = document.getElementById('google-auth-link');
+    const authNavItem = document.getElementById('google-auth-nav-item');
+    if (!authLink || !authNavItem) return;
+
+    try {
+      const response = await fetch('/auth/status', { credentials: 'include' });
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const existingLogoutItem = document.getElementById('google-logout-nav-item');
+
+      if (!data.authenticated) {
+        authLink.href = '/auth/google';
+        authLink.textContent = 'Sign in with Google';
+        authLink.setAttribute('aria-label', 'Sign in with Google');
+        if (existingLogoutItem) existingLogoutItem.remove();
+        return;
+      }
+
+      authLink.href = '/profile';
+      authLink.textContent = data.displayName ? `Hi, ${data.displayName}` : 'Profile';
+      authLink.setAttribute('aria-label', 'Open profile page');
+
+      if (!existingLogoutItem) {
+        const logoutItem = document.createElement('li');
+        logoutItem.className = 'nav-item nav__item';
+        logoutItem.id = 'google-logout-nav-item';
+        logoutItem.innerHTML = '<a href="/logout" class="nav-link nav__link" aria-label="Logout from account">Logout</a>';
+        authNavItem.insertAdjacentElement('afterend', logoutItem);
+      }
+    } catch (error) {
+      console.error('Google auth navbar initialization failed:', error);
+    }
+  }
+
+  /**
+   * Feature: Logout Confirmation
+   * Shows a confirmation dialog before navigating to /logout.
+   */
+  addLogoutConfirmation() {
+    document.addEventListener('click', (event) => {
+      const logoutLink = event.target.closest('a[href="/logout"]');
+      if (!logoutLink) return;
+
+      const confirmed = window.confirm('Are you sure you want to log out?');
+      if (!confirmed) {
+        event.preventDefault();
+      }
+    });
+  }
+
+  
 
   /**
    * Feature 1: Dynamic Welcome Message

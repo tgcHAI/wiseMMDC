@@ -24,7 +24,9 @@
             <li class="nav-item nav__item"><a href="#" class="nav-link nav__link nav-blog">Blog</a></li>
             <li class="nav-item nav__item"><a href="calculator.html" class="nav-link nav__link">Calculator</a></li>
             <li class="nav-item nav__item"><a href="about.html" class="nav-link nav__link active">About</a></li>
-            
+            <li class="nav-item nav__item" id="google-auth-nav-item">
+              <a href="/auth/google" class="nav-link nav__link" id="google-auth-link" aria-label="Sign in with Google">Sign in with Google</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -36,13 +38,13 @@
       <article class="article">
       <header class="article__header mb-4">
         <h1 class="article__title">About Wise MMDC</h1>
-        <p class="article__meta text-muted">MO-IT120 - Web Systems and Technology </p>
+        <p class="article__meta text-muted">MO-IT149 - Web Technology Application </p>
       </header>
 
       <div class="article__content">
         <h2 class="mb-3">Project Description</h2>
         <p>
-          This project is a web application designed for <strong> MO-IT120 - Web Systems and Technology course</strong>. Its primary goal is to help Filipino students compare the monthly expenses of a traditional, on-campus learning setup versus an online learning setup, like the one at MMDC.
+          This project is a web application designed for <strong> MO-IT149 - Web  Technology Application course</strong>. Its primary goal is to help Filipino students compare the monthly expenses of a traditional, on-campus learning setup versus an online learning setup, like the one at MMDC.
         </p>
         
         <p>
@@ -74,30 +76,30 @@
         </div>
 
         <h2>Meet the Team</h2>
-        <p>This project was developed by <strong>Group 13</strong> as part of our coursework:</p>
+        <p>This project was developed by <strong>Group 5</strong> as part of our coursework:</p>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin: 30px 0;">
           <div style="text-align: center; background: linear-gradient(135deg, #1B4F91 0%, #2d6bb5 100%); color: white; padding: 30px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <div style="font-size: 3rem; margin-bottom: 10px;">👨‍💻</div>
-            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">John Paul P.</h3>
+            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Jhaersn Fen Castañeda</h3>
             <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Project Lead & Frontend Development</p>
           </div>
           
           <div style="text-align: center; background: linear-gradient(135deg, #1B4F91 0%, #2d6bb5 100%); color: white; padding: 30px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <div style="font-size: 3rem; margin-bottom: 10px;">🎨</div>
-            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Jhaersn C.</h3>
+            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Chelsea Jin Collado</h3>
             <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">UI/UX Design & Bootstrap Integration</p>
           </div>
           
           <div style="text-align: center; background: linear-gradient(135deg, #1B4F91 0%, #2d6bb5 100%); color: white; padding: 30px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <div style="font-size: 3rem; margin-bottom: 10px;">⚡</div>
-            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Jubiler P.</h3>
+            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Angela Mae Ortega</h3>
             <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">JavaScript Development & Interactive Features</p>
           </div>
           
           <div style="text-align: center; background: linear-gradient(135deg, #1B4F91 0%, #2d6bb5 100%); color: white; padding: 30px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <div style="font-size: 3rem; margin-bottom: 10px;">📚</div>
-            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Reinard R.</h3>
+            <h3 style="margin: 10px 0; font-size: 1.2rem; color: white;">Monina Angela Patiño</h3>
             <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Documentation & Quality Assurance</p>
           </div>
         </div>
@@ -130,34 +132,29 @@
 
         <h2 class="mb-3 mt-5">Project Milestones</h2>
         <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-          <h3 style="color: var(--primary-navy); margin-top: 0;">✅ Milestone 1 - Static Website</h3>
+          <h3 style="color: var(--primary-navy); margin-top: 0;">Milestone 1 - Database Integration with CRUD Operations</h3>
           <ul style="margin-bottom: 0;">
-            <li>Created static HTML structure</li>
-            <li>Implemented custom CSS styling with BEM methodology</li>
-            <li>Added responsive design for mobile, tablet, and desktop</li>
-            <li>Deployed to GitHub Pages</li>
+            <li>Migrated the application database to <strong>MongoDB</strong></li>
+            <li>Implemented full <strong>CRUD operations (Create, Read, Update, Delete)</strong> for managing application data</li>
+            <li>Configured database connection using MongoDB Atlas</li>
+            <li>Structured collections and documents for efficient data storage and retrieval</li>
+            <li>Tested CRUD endpoints using API tools</li>
           </ul>
         </div>
         <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-          <h3 style="color: var(--primary-navy); margin-top: 0;">🚀 Milestone 2 - Interactive Website (Current)</h3>
+          <h3 style="color: var(--primary-navy); margin-top: 0;">Milestone 2 - Secure Web App with Authentication and File Storage</h3>
           <ul style="margin-bottom: 0;">
-            <li><strong>Integrated Bootstrap 5.3.2 framework</strong> via CDN</li>
-            <li><strong>Responsive Navbar:</strong> Mobile-friendly navigation with hamburger menu</li>
-            <li><strong>Bootstrap Grid System:</strong> Responsive layouts across all pages</li>
-            <li><strong>Form Enhancements:</strong> Bootstrap form controls and validation styling</li>
-            <li><strong>Button Components:</strong> Primary, secondary, and outline button styles</li>
-            <li><strong>JavaScript Interactivity:</strong> Dynamic expense calculator with real-time calculations</li>
-            <li><strong>Local Storage Integration:</strong> Automatic data persistence; inputs are saved and restored on refresh</li>
-            <li><strong>Study Mode Selection:</strong> Choose between Traditional and Online student data</li>
-            <li><strong>Utility Classes:</strong> Spacing, flexbox, and text alignment throughout</li>
+            <li><strong>Google OAuth Authentication:</strong> Users can securely sign in using Google accounts</li>
+            <li><strong>Role-Based Access Control (RBAC):</strong> Route protection with separate access for users and admins</li>
+            <li><strong>File Upload and Retrieval:</strong> Users can upload and view files while admins can access all uploaded files</li>
+            <li><strong>File Validation:</strong> File type and file size validation before upload</li>
+            <li><strong>Firebase Storage Support:</strong> Cloud storage integration with fallback to local storage</li>
+            <li><strong>Security Middleware:</strong> Helmet used to enforce secure HTTP headers</li>
+            <li><strong>Input Validation:</strong> express-validator ensures safe and validated user inputs</li>
+            <li><strong>Centralized Error Handling:</strong> A single error handler manages application and upload errors</li>
           </ul>
         </div>
-        <p style="margin-top: 20px;">
-          <strong>Course:</strong> MO-IT120 - Web Systems and Technology<br>
-          <strong>Group:</strong> Group 13<br>
-          <strong>Year:</strong> 2025
-        </p>
-
+<!--
         <h2 class="mb-3 mt-5">Mentor Feedback & Continuous Improvement</h2>
         <div style="background: linear-gradient(135deg, rgba(27, 79, 145, 0.05) 0%, rgba(249, 178, 51, 0.05) 100%); border-radius: 12px; padding: 30px; margin: 25px 0;">
           <h3 style="color: #1B4F91; margin-top: 0; display: flex; align-items: center; gap: 10px;">
@@ -195,45 +192,68 @@
             </div>
           </div>
         </div>
+      -->
 
-        <h3 class="mb-3">Implemented Improvements</h3>
+       <h3 class="mb-3">Implemented Improvements</h3>
+
         <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
           <h4 style="color: #1B4F91; margin-top: 0;">📊 Project Management Enhancements</h4>
+
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+            
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               <strong>🗓️ Project Timeline</strong><br>
-              <small>Added Gantt chart showing project phases and milestones</small>
+              <small>Created a structured timeline showing development phases for Milestone 1 and Milestone 2.</small>
             </div>
+
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               <strong>👥 Team Contributions</strong><br>
-              <small>Detailed individual roles and accomplishments</small>
+              <small>Documented team member roles, responsibilities, and completed development tasks.</small>
             </div>
+
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-              <strong>🚨 Contingency Planning</strong><br>
-              <small>Risk management strategies and QA processes</small>
+              <strong>🚨 Risk and Contingency Planning</strong><br>
+              <small>Identified potential development risks and established testing and debugging strategies.</small>
             </div>
+
           </div>
         </div>
 
         <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
           <h4 style="color: #1B4F91; margin-top: 0;">💻 Technical Improvements</h4>
+
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+            
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-              <strong>🔍 Input Validation</strong><br>
-              <small>Prevents NaN values and invalid inputs with real-time feedback</small>
+              <strong>🗄️ MongoDB Integration</strong><br>
+              <small>Migrated the application database to MongoDB and implemented full CRUD operations.</small>
             </div>
+
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-              <strong>♿ Accessibility</strong><br>
-              <small>ARIA labels, keyboard navigation, and screen reader support</small>
+              <strong>🔐 Authentication System</strong><br>
+              <small>Integrated Google OAuth login with session management for secure user authentication.</small>
             </div>
+
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-              <strong>🏗️ Code Structure</strong><br>
-              <small>Modular architecture with comprehensive documentation</small>
+              <strong>🛡️ Role-Based Access Control</strong><br>
+              <small>Implemented RBAC middleware to restrict routes and allow admin-only functionality.</small>
             </div>
+
             <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-              <strong>⚠️ Error Handling</strong><br>
-              <small>Comprehensive error management and user feedback</small>
+              <strong>📂 File Upload System</strong><br>
+              <small>Added secure file upload and retrieval with validation for file type and size.</small>
             </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <strong>⚙️ Security & Validation</strong><br>
+              <small>Implemented Helmet for HTTP security headers and express-validator for input validation.</small>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <strong>⚠️ Centralized Error Handling</strong><br>
+              <small>Added a unified error middleware to manage validation errors, upload errors, and server issues.</small>
+            </div>
+
           </div>
         </div>
 
@@ -274,4 +294,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-

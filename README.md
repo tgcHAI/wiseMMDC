@@ -2,6 +2,24 @@
 
 <img width="1615" height="786" alt="{343B75DC-B39F-48AC-81F6-0F69DC5A1879}" src="https://github.com/user-attachments/assets/d26ebf78-6f05-41b0-8235-ffd07f2bac6a" />
 
+## Project Description
+
+**Status:** Milestone 2 - Secure Web Application with Authentication and File Storage
+
+This project is a web application designed for the **MO-IT149 - Web Technology Application** course. Its primary goal is to help Filipino students compare the monthly expenses of a traditional, on-campus learning setup versus an online learning setup, like the one at MMDC.
+
+The application provides an **interactive calculator** where students can input their income and typical expenses for both scenarios to see a direct comparison of their remaining balance in real-time.
+
+In addition to the calculator, the system was enhanced with **backend functionality**, including:
+
+- **MongoDB database integration**
+- **Google OAuth authentication**
+- **Role-Based Access Control (RBAC)**
+- **Secure file upload and storage**
+- **API endpoints for data management**
+- **Input validation and centralized error handling**
+
+This tool aims to help students make more informed financial decisions about their education path.
 
 **🌐 Live Website:** [Click here to visit the live site](https://j0eychnpulpey.github.io/wiseMMDC-Final/index.html)
 
@@ -10,11 +28,10 @@
 ## Team Members - Group 10
 
 ### 👥 Team Overview
-- **Chelsea Jin Collado
-- **Jhaersn Fen Castañeda
-- **Angela Mae Ortega
-- **Monina Angela Patiño
----
+- **Jhaersn Fen Castañeda** - Project Lead & Frontend Development
+- **Chelsea Jin Collado** - UI/UX Design & Bootstrap Integration
+- **Angela Mae Ortega** - JavaScript Development & Interactive Features
+- **Monina Angela Patiño** - Documentation & Quality Assurance
 
 ## Features
 
@@ -56,86 +73,90 @@ An interactive page where users can:
 
 ## Technologies Used
 
-### Milestone 1 (Foundation)
-- **HTML5** - Structure and semantic markup
-- **CSS3** - Custom styling, layout, and responsive design
-- **BEM Methodology** - CSS naming convention for maintainability
+### Frontend Technologies
+- **HTML5** – Semantic structure and markup
+- **CSS3** – Custom styling and responsive design
+- **Bootstrap 5.3.2** – Responsive UI framework
+- **JavaScript (Vanilla JS)** – Interactive calculator and dynamic UI
+- **Local Storage API** – Client-side data persistence
 
-### Milestone 2 (Enhancement)
-- **Bootstrap 5.3.2** - Responsive framework with:
-  - Grid system for responsive layouts
-  - Navbar component with mobile hamburger menu
-  - Form controls and input styling
-  - Button components and utility classes
-- **JavaScript** - Interactive features including:
-  - Real-time expense calculations
-  - Dynamic form field creation and deletion
-  - Study mode selection functionality
-  - DOM manipulation and event handling
-  - Number formatting with comma separators
-  - **Local Storage Management** - Automatic data persistence and restoration
+### Backend Technologies
+- **Node.js** – JavaScript runtime environment
+- **Express.js** – Web application framework
+- **MongoDB Atlas** – Cloud NoSQL database
+- **Mongoose** – MongoDB object modeling
 
+### Authentication & Security
+- **Google OAuth 2.0** – Secure user authentication
+- **Passport.js** – OAuth authentication middleware
+- **JWT (JSON Web Tokens)** – Secure API authentication
+- **Helmet.js** – HTTP security headers
+- **Express Validator** – Input validation
+
+### File Storage
+- **Multer** – File upload middleware
+- **Firebase Storage** – Cloud file storage (optional)
+- **Local Storage Fallback** – Server-based file storage
+
+### Development Tools
+- **Git & GitHub** – Version control and collaboration
+- **GitHub Pages** – Static site deployment
+- **Postman** – API testing
+- **dotenv** – Environment variable management
 ---
 
 ## Project Structure
 
 ```
 WiseMMDC/
-├── html/
-│   ├── index.html          # Homepage with hero and blog
-│   ├── calculator.html     # Interactive expense calculator
-│   └── about.html          # About page with team info
-├── css/
-│   └── style.css           # Custom styles + Bootstrap integration
-├── images/
-│   ├── Wise MMDC Logo.png  # Main logo
-│   ├── indeximage02.png    # Hero section image
-│   ├── 1.png              # Blog article cover 1
-│   ├── 2.png              # Blog article cover 2
-│   └── 3.png              # Blog article cover 3
-├── script.js              # JavaScript functionality (legacy)
-└── README.md              # This file
-```
-Note: Due to an issue with the root directory in Github Pages, I decided not to create any more folders because it did not work. The website did not display "Index.html" as expected; instead, it showed the Readme.md file.
+│
+├── public/ # Frontend files
+│ ├── index.html
+│ ├── calculator.html
+│ ├── about.html
+│ └── uploads/ # Local uploaded files
+│
+├── models/ # Database models
+│ ├── User.js
+│ └── Calc.js
+│
+├── config/ # Configuration files
+│ └── firebase.js
+│
+├── server.js # Main backend server
+├── .env # Environment variables
+├── package.json
+└── README.md
 ---
 
 ## Key Features Added in Milestone 2
 
-✅ **Bootstrap Integration**
-- Responsive navigation bar with mobile menu
-- Bootstrap grid system across all pages
-- Form controls with proper styling
-- Button components with consistent styling
+### 🔐 Authentication & User Management
+- Google OAuth login system
+- Session-based authentication
+- JWT token authentication for APIs
+- Role-Based Access Control (Admin / User)
+- Protected routes for secure resources
 
-✅ **JavaScript Interactivity**
-- Real-time expense calculations
-- Dynamic form fields (add/remove custom expenses)
-- Editable expense labels
-- Study mode selection (Traditional/Online)
-- Sample data loading functionality
-- Number formatting (₱1,000.00 format)
-- **💾 Local Storage Integration** - Automatic data persistence
+### 📂 File Upload & Storage
+- Secure file upload using Multer
+- File type and size validation
+- Local file storage fallback
+- Optional Firebase cloud storage integration
+- Admin access to all uploaded files
+- Users can view their own uploaded files
 
-✅ **Enhanced User Experience**
-- Blue gradient background for calculator page
-- Hover effects on interactive elements
-- Smooth animations and transitions
-- Mobile-responsive design at all breakpoints
+### 🗄️ Database Integration
+- MongoDB Atlas cloud database
+- Mongoose schema modeling
+- CRUD operations for calculations and uploaded files
+- Database plan worksheet used to design collections and document structures
 
-✅ **Privacy Compliance**
-- No data collection or storage
-- Client-side only calculations
-- Compliant with RA 10173 (Data Privacy Act of 2012)
-
-✅ **💾 Local Storage Feature**
-- **Automatic Data Persistence**: All form inputs are automatically saved to browser's localStorage
-- **Data Restoration**: When you refresh the page, all your data is restored exactly as you left it
-- **Comprehensive Storage**: Saves income data, all expense fields, custom fields, and edited labels
-- **Smart Management**: Data expires after 30 days to prevent stale information
-- **Visual Feedback**: Toast notifications confirm when data is saved or restored
-- **Error Handling**: Graceful handling of localStorage errors with user notifications
-- **Privacy Safe**: Data never leaves your browser - completely local storage
-
+### 🛡️ Security Features
+- Helmet middleware for secure HTTP headers
+- Express-validator for request validation
+- Centralized error handling middleware
+- Environment variable protection using dotenv
 
 ---
 
@@ -163,10 +184,10 @@ The website is fully responsive and optimized for:
 
 ## Course Information
 
-- **Course:** MO-IT120 - Web Systems and Technology
+- **Course:** MO-IT149 - Web Technology Application
 - **Institution:** MMDC (Mapúa Malayan Digital College)
-- **Group:** Group 13
-- **Year:** 2025
+- **Group:** Group 10
+- **Year:** 2026
 
 ---
 
@@ -246,21 +267,18 @@ The website is fully responsive and optimized for:
 
 ## Project Milestones
 
-### ✅ Milestone 1 - Static Website
-- Created static HTML structure
-- Implemented custom CSS styling with BEM methodology
-- Added responsive design for mobile, tablet, and desktop
-- Deployed to GitHub Pages
+### ✅ Milestone 1 - Functional Web App with CRUD and API Integration
+- Implemented CRUD operations (Create, Read, Update, Delete) to manage application data.
+- Integrated API endpoints using Express.js.
+- Retrieved and displayed data dynamically from the backend.
+- Ensured that data can be created, viewed, updated, and deleted correctly through the system.
 
-### ✅ Milestone 2 - Interactive Website
-- Integrated Bootstrap 5.3.2 framework
-- Implemented responsive navbar with mobile menu
-- Applied Bootstrap grid system for layouts
-- Enhanced forms with Bootstrap form controls
-- Added JavaScript interactivity and DOM manipulation
-- Created dynamic expense calculator with real-time calculations
-- Implemented study mode selection feature
-- **💾 Added Local Storage Integration** - Automatic data persistence and restoration
+### ✅ Milestone 2 - Secure Web App with Authentication and File Storage
+- File Storage: Tested file uploads with valid/invalid types and verified secure storage and retrieval.
+- User Authentication: Tested login with valid/invalid credentials and confirmed correct token issuance.
+- Middleware & RBAC: Verified protected routes block unauthorized access and enforce role-based permissions.
+- Error Handling: Simulated invalid inputs and confirmed proper error messages and HTTP status codes.
+- Security: Verified Helmet.js headers and ensured inputs are validated and sanitized.
 
 
 ---
@@ -293,6 +311,9 @@ You can view the live version of our project deployed on GitHub Pages here:
 
 ## License
 
-This project is created for educational purposes at MMDC.
+This project is created for educational purposes as part of the MO-IT120 course at MMDC.
 
 ---
+
+**© 2026 Wise MMDC - Group 10. Helping Filipino students make informed financial decisions.**
+

@@ -197,7 +197,13 @@ app.get('/api/calcs', async (req, res) => {
 });
 
 // ===== SECURE FILE ROUTES  =====
-const { firebaseEnabled, uploadBufferToFirebase } = require('./config/firebase');
+const {
+  supabaseEnabled,
+  uploadBufferToSupabase,
+  objectExistsInSupabase,
+  deleteObjectFromSupabase,
+  listObjectsInSupabase,
+} = require('./config/supabase');
 const User = require('./models/User');
 const ALLOWED_FILE_TYPES = [
   'image/jpeg',
@@ -225,6 +231,99 @@ const upload = multer({
     cb(null, true);
   },
 });
+
+function extractSupabaseObjectPath(fileUrl) {
+  if (!fileUrl || typeof fileUrl !== 'string') {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(fileUrl);
+    const pathname = parsed.pathname || '';
+    const bucketName = process.env.SUPABASE_STORAGE_BUCKET || '';
+    const publicMarker = `/storage/v1/object/public/${bucketName}/`;
+    const signedMarker = `/storage/v1/object/sign/${bucketName}/`;
+
+    if (pathname.includes(publicMarker)) {
+      return decodeURIComponent(pathname.split(publicMarker)[1] || '');
+    }
+
+    if (pathname.includes(signedMarker)) {
+      return decodeURIComponent(pathname.split(signedMarker)[1] || '');
+    }
+  } catch (_error) {
+    return null;
+  }
+
+  return null;
+}
+
+function resolveStorageMetadata(doc) {
+  const fileUrl = doc.fileUrl || '';
+
+  if (fileUrl.startsWith('/uploads/')) {
+    return {
+      provider: 'local-demo',
+      path: fileUrl.replace(/^\//, ''),
+    };
+  }
+
+  const extractedPath = doc.storagePath || extractSupabaseObjectPath(fileUrl);
+  if (extractedPath) {
+    return {
+      provider: 'supabase',
+      path: extractedPath,
+    };
+  }
+
+  return {
+    provider: doc.storageProvider || 'local-demo',
+    path: doc.storagePath || null,
+  };
+}
+
+async function deleteStoredFile(doc) {
+  const storage = resolveStorageMetadata(doc);
+
+  if (storage.provider === 'local-demo') {
+    const localRelativePath = storage.path || (doc.fileUrl || '').replace(/^\//, '');
+    if (!localRelativePath) {
+      return;
+    }
+    const localPath = path.join(__dirname, 'public', localRelativePath);
+    await fs.promises.rm(localPath, { force: true });
+    return;
+  }
+
+  if (storage.provider === 'supabase' && storage.path) {
+    await deleteObjectFromSupabase(storage.path);
+  }
+}
+
+async function cleanupOrphanedSupabaseFiles() {
+  if (!supabaseEnabled) {
+    return;
+  }
+
+  const allUploads = await User.find({}, 'fileUrl storageProvider storagePath').lean();
+  const knownPaths = new Set();
+
+  for (const doc of allUploads) {
+    const storage = resolveStorageMetadata(doc);
+    if (storage.provider === 'supabase' && storage.path) {
+      knownPaths.add(storage.path);
+    }
+  }
+
+  const storedPaths = await listObjectsInSupabase('uploads');
+  const orphanedPaths = storedPaths.filter((storedPath) => !knownPaths.has(storedPath));
+
+  if (orphanedPaths.length === 0) {
+    return;
+  }
+
+  await Promise.all(orphanedPaths.map((storedPath) => deleteObjectFromSupabase(storedPath)));
+}
 
 app.get('/upload', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'upload.html'));
@@ -254,15 +353,15 @@ app.post('/upload',
       let fileUrl = '';
       let storageMode = 'local-demo';
 
-      if (firebaseEnabled) {
+      if (supabaseEnabled) {
         try {
-          fileUrl = await uploadBufferToFirebase({
+          fileUrl = await uploadBufferToSupabase({
             buffer: req.file.buffer,
             destination: objectKey,
             contentType: req.file.mimetype,
           });
-          storageMode = 'firebase';
-        } catch (_firebaseError) {
+          storageMode = 'supabase';
+        } catch (_supabaseError) {
           storageMode = 'local-demo';
         }
       }
@@ -281,6 +380,8 @@ app.post('/upload',
         email: req.user.email,
         fileName: req.file.originalname,
         fileUrl,
+        storageProvider: storageMode,
+        storagePath: storageMode === 'supabase' ? objectKey : fileUrl.replace(/^\//, ''),
         contentType: req.file.mimetype,
       });
 
@@ -298,6 +399,7 @@ app.post('/upload',
 // PROTECTED: All Files (admin only)
 async function listUploadsHandler(req, res, next) {
   try {
+    await cleanupOrphanedSupabaseFiles();
     const uploads = await User.find().sort({ uploadDate: -1 });
     const visibleUploads = await filterExistingUploads(uploads);
     res.json({
@@ -314,15 +416,45 @@ async function filterExistingUploads(uploadDocs) {
   const visible = [];
 
   for (const doc of uploadDocs) {
-    const fileUrl = doc.fileUrl || '';
+    const storage = resolveStorageMetadata(doc);
 
-    if (fileUrl.startsWith('/uploads/')) {
-      const localPath = path.join(__dirname, 'public', fileUrl.replace(/^\//, ''));
+    if (storage.provider === 'local-demo') {
+      const localRelativePath = storage.path || (doc.fileUrl || '').replace(/^\//, '');
+      const localPath = path.join(__dirname, 'public', localRelativePath);
       try {
         await fs.promises.access(localPath);
+        if (doc.storageProvider !== 'local-demo' || doc.storagePath !== localRelativePath) {
+          doc.storageProvider = 'local-demo';
+          doc.storagePath = localRelativePath;
+          await doc.save();
+        }
         visible.push(doc);
       } catch (_error) {
         staleIds.push(doc._id);
+      }
+      continue;
+    }
+
+    if (storage.provider === 'supabase' && storage.path) {
+      if (!supabaseEnabled) {
+        visible.push(doc);
+        continue;
+      }
+
+      try {
+        const exists = await objectExistsInSupabase(storage.path);
+        if (exists) {
+          if (doc.storageProvider !== 'supabase' || doc.storagePath !== storage.path) {
+            doc.storageProvider = 'supabase';
+            doc.storagePath = storage.path;
+            await doc.save();
+          }
+          visible.push(doc);
+        } else {
+          staleIds.push(doc._id);
+        }
+      } catch (_error) {
+        visible.push(doc);
       }
       continue;
     }
@@ -342,6 +474,7 @@ app.get('/my-uploads',
   authorizeRoles('user', 'admin'),
   async (req, res, next) => {
     try {
+      await cleanupOrphanedSupabaseFiles();
       const query = req.user.role === 'admin' ? {} : { email: req.user.email };
       const uploads = await User.find(query).sort({ uploadDate: -1 });
       const visibleUploads = await filterExistingUploads(uploads);
@@ -350,6 +483,44 @@ app.get('/my-uploads',
           ? `Admin view - ${visibleUploads.length} files`
           : `User view - ${visibleUploads.length} files`,
         users: visibleUploads,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+app.delete('/uploads/:id',
+  authenticateSessionOrToken,
+  authorizeRoles('user', 'admin'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid file id.' });
+      }
+
+      const uploadDoc = await User.findById(id);
+      if (!uploadDoc) {
+        return res.status(404).json({ error: 'File record not found.' });
+      }
+
+      const isOwner = uploadDoc.email === req.user.email;
+      if (req.user.role !== 'admin' && !isOwner) {
+        return res.status(403).json({ error: 'Forbidden. You can only delete your own files.' });
+      }
+
+      try {
+        await deleteStoredFile(uploadDoc);
+      } catch (_storageError) {
+        // Continue deletion of stale metadata if file is already missing.
+      }
+
+      await User.deleteOne({ _id: uploadDoc._id });
+
+      return res.json({
+        message: 'File deleted successfully.',
+        deletedId: String(uploadDoc._id),
       });
     } catch (error) {
       next(error);
@@ -444,7 +615,7 @@ app.get('/', (req, res) => {
     </head><body class="bg-primary text-white p-5">
       <div class="container text-center">
         <h1> WiseMMDC Enterprise Edition</h1>
-        <p>Token Auth + RBAC + Firebase + Calculator</p>
+        <p>Token Auth + RBAC + Supabase + Calculator</p>
         <div class="mt-4">
           <a href="/auth/google" class="btn btn-light btn-lg me-3"> OAuth Login</a>
           <a href="/upload" class="btn btn-outline-light btn-lg me-3">Upload Page</a>

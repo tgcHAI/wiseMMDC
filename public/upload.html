@@ -80,7 +80,17 @@
   <script>
     let currentUser = null;
     let isUploading = false;
+    const deletingIds = new Set();
     const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
     function setAuthStatus(message, variant) {
       const authStatus = document.getElementById('auth-status');
@@ -88,6 +98,37 @@
       authStatus.innerHTML = message
         ? `<div class="alert alert-${variant}">${message}</div>`
         : '';
+    }
+
+    async function deleteUpload(fileId) {
+      if (!fileId || deletingIds.has(fileId)) {
+        return;
+      }
+
+      const confirmed = window.confirm('Delete this file? This removes both file and metadata.');
+      if (!confirmed) {
+        return;
+      }
+
+      deletingIds.add(fileId);
+      try {
+        const res = await fetch(`/uploads/${encodeURIComponent(fileId)}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Delete failed.');
+        }
+
+        document.getElementById('message').innerHTML = `<div class="alert alert-success">${escapeHtml(data.message || 'File deleted successfully.')}</div>`;
+        await loadFiles();
+      } catch (error) {
+        document.getElementById('message').innerHTML = `<div class="alert alert-danger">${escapeHtml(error.message || 'Delete failed.')}</div>`;
+      } finally {
+        deletingIds.delete(fileId);
+      }
     }
 
     async function loadSessionUser() {
@@ -228,6 +269,7 @@
 
         users.slice(0, 12).forEach(user => {
           const isImage = user.contentType?.startsWith('image/');
+          const canDelete = currentUser?.role === 'admin' || currentUser?.email === user.email;
           fileList.innerHTML += `
             <div class="col-md-4 mb-3">
               <div class="card shadow-sm">
@@ -236,9 +278,10 @@
                   : `<div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height:150px">File</div>`
                 }
                 <div class="card-body">
-                  <h6 class="card-title">${user.fileName}</h6>
-                  <small class="text-muted">${user.name} • ${user.email}</small>
+                  <h6 class="card-title">${escapeHtml(user.fileName)}</h6>
+                  <small class="text-muted">${escapeHtml(user.name)} • ${escapeHtml(user.email)}</small>
                   <a href="${user.fileUrl}" class="btn btn-sm btn-outline-primary mt-2 w-100" target="_blank">View File</a>
+                  ${canDelete ? `<button type="button" class="btn btn-sm btn-outline-danger mt-2 w-100 delete-upload-btn" data-id="${user._id}">Delete File</button>` : ''}
                   <small class="text-muted d-block mt-1">${new Date(user.uploadDate).toLocaleDateString()}</small>
                 </div>
               </div>
@@ -259,6 +302,16 @@
       }
       loadFiles();
     })();
+
+    document.getElementById('fileList').addEventListener('click', async (event) => {
+      const button = event.target.closest('.delete-upload-btn');
+      if (!button) {
+        return;
+      }
+
+      const fileId = button.dataset.id;
+      await deleteUpload(fileId);
+    });
   </script>
 </body>
 </html>

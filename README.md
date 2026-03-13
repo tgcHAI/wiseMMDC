@@ -25,7 +25,7 @@ This tool aims to help students make more informed financial decisions about the
 
 ---
 
-## Team Members - Group 10
+## Team Members - Group 5
 
 ### 👥 Team Overview
 - **Jhaersn Fen Castañeda** - Project Lead & Frontend Development
@@ -95,7 +95,7 @@ An interactive page where users can:
 
 ### File Storage
 - **Multer** – File upload middleware
-- **Firebase Storage** – Cloud file storage (optional)
+- **Supabase Storage** – Cloud file storage 
 - **Local Storage Fallback** – Server-based file storage
 
 ### Development Tools
@@ -121,7 +121,7 @@ WiseMMDC/
 │ └── Calc.js
 │
 ├── config/ # Configuration files
-│ └── firebase.js
+│ └── supabase.js
 │
 ├── server.js # Main backend server
 ├── .env # Environment variables
@@ -142,7 +142,7 @@ WiseMMDC/
 - Secure file upload using Multer
 - File type and size validation
 - Local file storage fallback
-- Optional Firebase cloud storage integration
+- Optional Supabase cloud storage integration
 - Admin access to all uploaded files
 - Users can view their own uploaded files
 
@@ -186,7 +186,7 @@ The website is fully responsive and optimized for:
 
 - **Course:** MO-IT149 - Web Technology Application
 - **Institution:** MMDC (Mapúa Malayan Digital College)
-- **Group:** Group 10
+- **Group:** Group 5
 - **Year:** 2026
 
 ---
@@ -315,5 +315,5 @@ This project is created for educational purposes as part of the MO-IT120 course 
 
 ---
 
-**© 2026 Wise MMDC - Group 10. Helping Filipino students make informed financial decisions.**
+**© 2026 Wise MMDC - Group 5. Helping Filipino students make informed financial decisions.**
 

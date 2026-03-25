@@ -63,5 +63,21 @@ Notes:
 -This is a student project for academic purposes
 -Blog content is for display only (no full articles)
 
+CHANGELOG:
+
+LOG-01 | Updated project status from Milestone 2 to Milestone 4 | Changed status to reflect complete implementation of all features including authentication and file storage | Project status now accurately represents the full-stack capabilities implemented | Updated README.md project description section
+
+LOG-02 | Enhanced project description with full-stack context | Added detailed information about backend technologies and security features | Project description now clearly explains the comprehensive nature of the application | Updated README.md project description section
+
+LOG-03 | Expanded Technologies Used section | Added missing technologies like Google Auth Library, CORS, and Express Session | Complete technology stack is now documented | Updated README.md Technologies Used section
+
+LOG-04 | Detailed project structure documentation | Updated file structure to include all directories and files found in repository | Complete project organization is now visible | Updated README.md Project Structure section
+
+LOG-05 | Enhanced Key Features section | Renamed to Milestone 4 and provided detailed descriptions of authentication, file storage, database, and security features | Comprehensive feature documentation now available | Updated README.md Key Features section
+
+LOG-06 | Expanded Project Milestones | Added detailed descriptions of all four milestones with accomplishments | Complete development timeline now documented | Updated README.md Project Milestones section
+
+LOG-07 | Added backend server information | Included information about Node.js server running on port 3000 | Backend server details now available for developers | Updated README.md Project Description section
+
 Privacy
 Follows the Data Privacy Act of 2012 (RA 10173).

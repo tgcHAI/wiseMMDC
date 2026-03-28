@@ -1,3 +1,4 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -25,10 +26,15 @@ app.use(helmet({
 app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
-  secret: 'wiseMMDC-session-secret-2026',
+  secret: process.env.SESSION_SECRET || 'wiseMMDC-session-secret-2026',
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } 
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000
+  }
 }));
 
 // Passport setup 
@@ -44,11 +50,14 @@ passport.deserializeUser((user, done) => {
 });
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  const callbackURL = process.env.NODE_ENV === 'production'
+    ? 'https://your-production-url.com/auth/google/callback'
+    : '/auth/google/callback';
   passport.use(new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/auth/google/callback',
+      callbackURL: callbackURL,
     },
     (_accessToken, _refreshToken, profile, done) => done(null, profile)
   ));
@@ -644,8 +653,9 @@ app.use((err, req, res, next) => {
   return res.status(statusCode).json({ error: message });
 });
 
-app.listen(3000, () => {
-  console.log(' Enterprise Server: http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(` Enterprise Server: http://localhost:${PORT}`);
   console.log(' OAuth: /auth/google');
   console.log(' Token Login: POST /google-login');
   console.log(' Protected: /upload, /users, /profile');

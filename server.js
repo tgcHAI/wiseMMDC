@@ -28,11 +28,11 @@ app.use(express.static('public'));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'wiseMMDC-session-secret-2026',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'none',
+    sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));

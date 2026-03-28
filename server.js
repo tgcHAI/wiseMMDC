@@ -51,7 +51,7 @@ passport.deserializeUser((user, done) => {
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   const callbackURL = process.env.NODE_ENV === 'production'
-    ? 'https://your-production-url.com/auth/google/callback'
+    ? 'https://wisemmdc.onrender.com/auth/google/callback'
     : '/auth/google/callback';
   passport.use(new GoogleStrategy(
     {

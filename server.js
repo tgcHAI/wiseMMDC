@@ -16,6 +16,9 @@ require('dotenv').config();
 
 const app = express();
 
+// Trust proxy for Render 
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(cors());
 app.use(helmet({
@@ -602,8 +605,14 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    console.log(' OAuth Login:', req.user.displayName);
-    res.redirect('/');
+    console.log(' OAuth Login:', req.user.displayName || req.user.email);
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.redirect('/');
+      }
+      res.redirect('/');
+    });
   }
 );
 app.get('/logout', (req, res) => {
